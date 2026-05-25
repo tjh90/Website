@@ -10,13 +10,13 @@
     <name>Parent</name>
 
     <properties>
-        <junit.version>6.0.3</junit.version>
+        <junit.version>6.1.0</junit.version>
         <maven.compiler.release>24</maven.compiler.release>
         <maven.compiler.source>24</maven.compiler.source>
         <maven.compiler.target>24</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring.version>4.0.5</spring.version>
-        <vaadin.version>24.10.0</vaadin.version>
+        <spring.version>4.0.6</spring.version>
+        <vaadin.version>25.1.6</vaadin.version>
     </properties>
 
     <dependencyManagement>
