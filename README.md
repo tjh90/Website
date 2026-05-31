@@ -6,7 +6,7 @@ Simple website
 
 ## Prerequisites
 
-- Java 24
+- Java 25
 - Maven
 - Docker & Docker Compose
 

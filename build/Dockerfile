@@ -1,6 +1,6 @@
 # Dockerfile for creating a package from the website .jar.
 
-FROM ubuntu:24.04 AS website-run
+FROM ubuntu:26.04 AS website-run
 
 SHELL [ "/bin/bash", "-c" ]
 
@@ -9,6 +9,7 @@ RUN apt update && \
     apt upgrade -y && \
 \
     # Add the Adoptium repository to the apt sources and update.
+    apt update && \
     apt install -y apt-transport-https gpg wget && \
     wget -qO - https://packages.adoptium.net/artifactory/api/gpg/key/public | \
         gpg --dearmor | \
@@ -19,7 +20,7 @@ RUN apt update && \
     apt update && \
 \
     # Install the JRE.
-    apt install --no-install-recommends -y fakeroot temurin-24-jre && \
+    apt install --no-install-recommends -y fakeroot temurin-25-jre && \
 \
     # Clean up the apt cache.
     apt clean && \

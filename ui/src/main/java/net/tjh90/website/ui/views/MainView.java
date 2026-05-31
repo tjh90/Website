@@ -9,6 +9,8 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
+import com.vaadin.flow.router.AfterNavigationEvent;
+import com.vaadin.flow.router.AfterNavigationObserver;
 import com.vaadin.flow.router.Layout;
 
 import net.tjh90.website.ui.views.anascramble.AnascrambleView;
@@ -17,7 +19,7 @@ import net.tjh90.website.ui.views.privacy.PrivacyView;
 
 /// Defines the main application view elements.
 @Layout
-public class MainView extends AppLayout {
+public class MainView extends AppLayout implements AfterNavigationObserver {
 
     private static final String DARK_MODE = "Dark mode";
 
@@ -76,7 +78,7 @@ public class MainView extends AppLayout {
     }
 
     @Override
-    public void afterNavigation() {
+    public void afterNavigation(AfterNavigationEvent event) {
         viewModel.onNavigation();
     }
 
