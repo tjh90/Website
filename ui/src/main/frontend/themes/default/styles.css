@@ -35,3 +35,7 @@ div.scrambleContainer > i {
     color: var(--lumo-primary-color-dark);
     position: absolute;
 }
+
+div.scrambleContainer > i.dimmed {
+    opacity: 0.25;
+}
