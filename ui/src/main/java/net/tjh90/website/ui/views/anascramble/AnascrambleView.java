@@ -7,6 +7,9 @@ import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.dom.Style;
@@ -26,14 +29,16 @@ public class AnascrambleView extends VerticalLayout implements HasTitle {
 
     private static final String SCRAMBLE_FLD_LBL = "Letters to scramble";
     private static final String SCRAMBLE_BTN_TEXT = "Scramble!";
+    private static final String KNOWN_POSITIONS_LABEL_TEXT = "Solution:";
 
     private static final float SCRAMBLE_CONTAINER_SIZE = 400.0f;
 
     private final TextField lettersFld = new TextField(SCRAMBLE_FLD_LBL);
     private final Button scrambleBtn = new Button(SCRAMBLE_BTN_TEXT);
     private final Div scrambleContainer = new Div();
+    private final HorizontalLayout knownPositionsLayout = new HorizontalLayout();
+    private final Span knownPositionsLabel = new Span(KNOWN_POSITIONS_LABEL_TEXT);
 
-    // View model instance lifetime must match the view, but we don't need to access it after creation.
     @SuppressWarnings("unused")
     private final AnascrambleViewModel viewModel;
 
@@ -51,6 +56,12 @@ public class AnascrambleView extends VerticalLayout implements HasTitle {
             style.setPosition(Position.RELATIVE);
         }
         add(scrambleContainer);
+
+        // Add known positions layout (hidden until letters are entered).
+        knownPositionsLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        knownPositionsLayout.add(knownPositionsLabel);
+        knownPositionsLayout.setVisible(false);
+        add(knownPositionsLayout);
 
         // Add entry field.
         add(lettersFld);
@@ -70,6 +81,23 @@ public class AnascrambleView extends VerticalLayout implements HasTitle {
     public void setScrambledLetters(final List<Component> scrambledLetters) {
         scrambleContainer.removeAll();
         scrambleContainer.add(scrambledLetters);
+    }
+
+    public void clearScrambledLetters() {
+        scrambleContainer.removeAll();
+    }
+
+    public void setPositionFields(final List<TextField> fields) {
+        knownPositionsLayout.removeAll();
+        knownPositionsLayout.add(knownPositionsLabel);
+        knownPositionsLayout.add(fields.toArray(TextField[]::new));
+        knownPositionsLayout.setVisible(true);
+    }
+
+    public void clearPositionFields() {
+        knownPositionsLayout.removeAll();
+        knownPositionsLayout.add(knownPositionsLabel);
+        knownPositionsLayout.setVisible(false);
     }
 
     TextField getLettersFld() {
