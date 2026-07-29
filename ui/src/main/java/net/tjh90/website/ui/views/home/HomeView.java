@@ -24,14 +24,14 @@ public class HomeView extends HorizontalLayout implements HasTitle {
     public static final String NAV_LABEL = "Home";
     public static final String TITLE = "Tim's Page";
 
-    private static final String LINKS_TEXT = "Links:";
+    static final String GITHUB_LINK = "https://www.github.com/tjh90";
+    static final String GITHUB_TEXT = "GitHub";
+    static final String PHD_THESIS_LINK = "https://eprints.soton.ac.uk/404274/";
+    static final String PHD_THESIS_TEXT = "PhD Thesis";
+    static final String PAPER_LINK = "https://ieeexplore.ieee.org/document/7029130";
+    static final String PAPER_TEXT = "Paper";
 
-    private static final String GITHUB_TEXT = "GitHub";
-    private static final String GITHUB_LINK = "https://www.github.com/tjh90";
-    private static final String PHD_THESIS_TEXT = "PhD Thesis";
-    private static final String PHD_THESIS_LINK = "https://eprints.soton.ac.uk/404274/";
-    private static final String PAPER_TEXT = "Paper";
-    private static final String PAPER_LINK = "https://ieeexplore.ieee.org/document/7029130";
+    private static final String LINKS_TEXT = "Links:";
 
     private static final String IMG = "sisley.jpg";
     private static final String IMG_ALT_TEXT = "Sisley - Lady's Cove (1897)";
