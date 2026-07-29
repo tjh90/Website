@@ -58,7 +58,10 @@ public class AnascrambleView extends VerticalLayout implements HasTitle {
         add(scrambleContainer);
 
         // Add known positions layout (hidden until letters are entered).
+        knownPositionsLayout.setWidthFull();
         knownPositionsLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        knownPositionsLayout.getStyle().set("flex-wrap", "wrap");
+        knownPositionsLayout.getStyle().set("justify-content", "center");
         knownPositionsLayout.add(knownPositionsLabel);
         knownPositionsLayout.setVisible(false);
         add(knownPositionsLayout);
