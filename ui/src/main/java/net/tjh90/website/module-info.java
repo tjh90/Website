@@ -1,6 +1,8 @@
 module net.tjh90.website.ui {
     requires net.tjh90.website.core;
 
+    requires java.net.http;
+
     // Spring Boot modules.
     requires spring.boot;
     requires spring.boot.autoconfigure;

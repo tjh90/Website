@@ -21,12 +21,12 @@ import net.tjh90.website.ui.views.privacy.PrivacyView;
 @Layout
 public class MainView extends AppLayout implements AfterNavigationObserver {
 
-    private static final String DARK_MODE = "Dark mode";
+    static final String DARK_MODE_TEXT = "Dark mode";
 
     private final MainViewModel viewModel;
 
     private H1 title = new H1();
-    private SideNavItem darkModeItem = new SideNavItem(DARK_MODE);
+    private SideNavItem darkModeItem = new SideNavItem(DARK_MODE_TEXT);
     private Checkbox darkModeCheckbox = new Checkbox(false);
 
     public MainView() {

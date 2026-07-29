@@ -1,33 +1,26 @@
 package net.tjh90.website.ui;
 
 import com.microsoft.playwright.Browser;
-import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Playwright;
-import com.microsoft.playwright.Response;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-class MainViewTests {
+public class PlaywrightTests {
 
     private static ConfigurableApplicationContext context;
     private static Playwright playwright;
-    private Browser browser;
+    protected Browser browser;
+
+    private static final String[] args = { "--server.port=0", "--vaadin.devmode.enable=false" };
 
     @BeforeAll
     protected static void startApp() {
         playwright = Playwright.create();
-        context = SpringApplication.run(Application.class,
-            "--server.port=0",
-            "--vaadin.devmode.enabled=false");
+        context = SpringApplication.run(Application.class, args);
     }
 
     @AfterAll
@@ -52,23 +45,9 @@ class MainViewTests {
         }
     }
 
-    private String baseUrl() {
+    protected String baseUrl() {
         String port = context.getEnvironment().getProperty("local.server.port", String.class);
         return "http://localhost:" + port;
     }
-
-    @Test
-    protected void homePageLoadsSuccessfully() {
-        Page page = browser.newPage();
-        Response response = page.navigate(baseUrl() + "/");
-        assertTrue(response.ok());
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {"/anascramble", "/privacy"})
-    protected void anascramblePageHasExpectedRoute(String route) {
-        Page page = browser.newPage();
-        page.navigate(baseUrl() + route);
-        assertTrue(page.url().endsWith(route));
-    }
 }
+
