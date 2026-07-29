@@ -112,7 +112,6 @@ public class AnascrambleViewModel {
             field.setWidth("2.5em");
             field.setAllowedCharPattern(POSITION_PATTERN);
             field.setValueChangeMode(ValueChangeMode.EAGER);
-            field.setPlaceholder(Integer.toString(i + 1));
 
             int pos = i;
             field.addValueChangeListener(e -> onPositionFieldChanged(pos, e.getValue()));
