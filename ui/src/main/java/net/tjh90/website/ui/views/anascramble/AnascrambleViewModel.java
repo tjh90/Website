@@ -2,7 +2,6 @@ package net.tjh90.website.ui.views.anascramble;
 
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import com.vaadin.flow.component.AbstractField.ComponentValueChangeEvent;
@@ -165,31 +164,11 @@ public class AnascrambleViewModel {
     }
 
     private boolean isLetterAvailable(char letter) {
-        List<Boolean> claimed = computeClaimedMap();
-        String letters = model != null ? model.getLetters() : "";
-        for (int i = 0; i < letters.length(); i++) {
-            if (!claimed.get(i) && Character.toUpperCase(letters.charAt(i)) == letter) {
-                return true;
-            }
-        }
-        return false;
+        return model != null && model.isLetterAvailable(letter);
     }
 
     private List<Boolean> computeClaimedMap() {
-        String letters = model != null ? model.getLetters() : "";
-        List<Boolean> claimed = new ArrayList<>(Collections.nCopies(letters.length(), false));
-        List<Character> known = model != null ? model.getKnownLetters() : List.of();
-        for (Character knownLetter : known) {
-            if (knownLetter != null) {
-                for (int i = 0; i < letters.length(); i++) {
-                    if (!claimed.get(i) && Character.toUpperCase(letters.charAt(i)) == knownLetter.charValue()) {
-                        claimed.set(i, true);
-                        break;
-                    }
-                }
-            }
-        }
-        return claimed;
+        return model != null ? model.computeClaimedMap() : List.of();
     }
 
     private void refreshDimming() {

@@ -20,12 +20,13 @@ import net.tjh90.website.ui.HasTitle;
 import net.tjh90.website.ui.views.CssClassNames;
 
 /// Defines the Anascramble view elements. UI logic is handled in [AnascrambleViewModel].
-@Route("anascramble")
+@Route(AnascrambleView.ROUTE)
 public class AnascrambleView extends VerticalLayout implements HasTitle {
 
-    public static final String NAV_LABEL = "Anascramble";
+    public static final String ROUTE = "anascramble";
 
-    private static final String TITLE = "Anascramble";
+    public static final String NAV_LABEL = "Anascramble";
+    public static final String TITLE = "Anascramble";
 
     static final String SCRAMBLE_FLD_LBL = "Letters to scramble";
     static final String SCRAMBLE_BTN_TEXT = "Scramble!";

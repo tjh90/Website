@@ -18,8 +18,10 @@ import net.tjh90.website.ui.components.Icons;
 import net.tjh90.website.ui.views.CssClassNames;
 
 /// Defines the home page view.
-@Route("privacy")
+@Route(PrivacyView.ROUTE)
 public class PrivacyView extends VerticalLayout implements HasTitle {
+
+    public static final String ROUTE = "privacy";
 
     public static final String TITLE = "Privacy";
     public static final String NAV_LABEL = TITLE;
