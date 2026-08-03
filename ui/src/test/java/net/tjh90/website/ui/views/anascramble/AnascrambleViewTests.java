@@ -182,8 +182,12 @@ class AnascrambleViewTests extends PlaywrightTests {
     }
 
     private void scramble() {
+        scramble(TEST_LETTERS);
+    }
+
+    private void scramble(String letters) {
         getScrambleButton().click();
         page.waitForFunction("() => document.querySelectorAll('" + SCRAMBLED_CHARACTER_SELECTOR + "').length === "
-            + TEST_LETTERS.length());
+            + letters.length());
     }
 }

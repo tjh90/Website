@@ -1,5 +1,6 @@
 package net.tjh90.website.ui.views;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -11,15 +12,25 @@ import com.microsoft.playwright.options.AriaRole;
 import com.microsoft.playwright.options.LoadState;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.util.stream.Stream;
+
 import net.tjh90.website.ui.PlaywrightTests;
+import net.tjh90.website.ui.views.anascramble.AnascrambleView;
+import net.tjh90.website.ui.views.home.HomeView;
+import net.tjh90.website.ui.views.privacy.PrivacyView;
 
 class MainViewTests extends PlaywrightTests {
 
     private static final String APP_LAYOUT = "vaadin-app-layout";
     private static final String CHECKBOX = "vaadin-side-nav-item vaadin-checkbox";
+
+    private static String prependForwardSlash(String route) {
+        return route.startsWith("/") ? route : "/" + route;
+    }
 
     @Test
     protected void homePageLoadsSuccessfully() {
@@ -29,7 +40,7 @@ class MainViewTests extends PlaywrightTests {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"/anascramble", "/privacy"})
+    @ValueSource(strings = {"/" + AnascrambleView.ROUTE, "/" + PrivacyView.ROUTE})
     protected void pagesHaveExpectedRoutes(String route) {
         Page page = browser.newPage();
         page.navigate(baseUrl() + route);
@@ -37,11 +48,7 @@ class MainViewTests extends PlaywrightTests {
     }
 
     @ParameterizedTest
-    @CsvSource({
-        "Home, /",
-        "Anascramble, /anascramble",
-        "Privacy, /privacy"
-    })
+    @MethodSource("provideNavItemsAndExpectedRoutes")
     protected void clickingNavItemNavigatesToCorrectPage(String navLabel, String expectedRoute) {
         Page page = browser.newPage();
         page.navigate(baseUrl() + "/");
@@ -52,6 +59,14 @@ class MainViewTests extends PlaywrightTests {
         page.waitForLoadState(LoadState.NETWORKIDLE);
 
         assertTrue(page.url().endsWith(expectedRoute));
+    }
+
+    private static Stream<Arguments> provideNavItemsAndExpectedRoutes() {
+        return Stream.of(
+            Arguments.of(HomeView.NAV_LABEL, prependForwardSlash(HomeView.ROUTE)),
+            Arguments.of(AnascrambleView.NAV_LABEL, prependForwardSlash(AnascrambleView.ROUTE)),
+            Arguments.of(PrivacyView.NAV_LABEL, prependForwardSlash(PrivacyView.ROUTE))
+        );
     }
 
     @Test
@@ -107,7 +122,7 @@ class MainViewTests extends PlaywrightTests {
         openDrawer(page);
         assertTrue(isDrawerOpened(page));
 
-        page.getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("Privacy")).first().click();
+        page.getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName(PrivacyView.TITLE)).first().click();
         page.waitForLoadState(LoadState.NETWORKIDLE);
 
         assertFalse(isDrawerOpened(page));
@@ -130,11 +145,29 @@ class MainViewTests extends PlaywrightTests {
         page.waitForTimeout(300);
         assertTrue(isDrawerOpened(page));
 
-        page.getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("Privacy")).first().click();
+        page.getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName(PrivacyView.TITLE)).first().click();
         page.waitForLoadState(LoadState.NETWORKIDLE);
 
-        assertTrue(page.url().endsWith("/privacy"));
+        assertTrue(page.url().endsWith(prependForwardSlash(PrivacyView.ROUTE)));
         assertFalse(isDrawerOpened(page));
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideRoutesAndExpectedTitles")
+    protected void headerTitleReflectsCurrentPage(String route, String expectedTitle) {
+        Page page = browser.newPage();
+        page.navigate(baseUrl() + route);
+        page.waitForLoadState(LoadState.NETWORKIDLE);
+
+        assertEquals(expectedTitle, page.locator("vaadin-horizontal-layout.header h1").innerText().trim());
+    }
+
+    private static Stream<Arguments> provideRoutesAndExpectedTitles() {
+        return Stream.of(
+            Arguments.of(prependForwardSlash(HomeView.ROUTE), HomeView.TITLE),
+            Arguments.of(prependForwardSlash(AnascrambleView.ROUTE), AnascrambleView.TITLE),
+            Arguments.of(prependForwardSlash(PrivacyView.ROUTE), PrivacyView.TITLE)
+        );
     }
 
     private void openDrawer(Page page) {

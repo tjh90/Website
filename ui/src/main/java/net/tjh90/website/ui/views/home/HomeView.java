@@ -18,8 +18,10 @@ import net.tjh90.website.ui.components.Icons;
 import net.tjh90.website.ui.views.CssClassNames;
 
 /// Defines the home page view.
-@Route("")
+@Route(HomeView.ROUTE)
 public class HomeView extends HorizontalLayout implements HasTitle {
+
+    public static final String ROUTE = "";
 
     public static final String NAV_LABEL = "Home";
     public static final String TITLE = "Tim's Page";
