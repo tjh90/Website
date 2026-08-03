@@ -13,6 +13,7 @@ public class CssClassNames {
 
     // Anascsramble.
     public static final String SCRAMBLE_CONTAINER = "scrambleContainer";
+    public static final String KNOWN_POSITION_FIELD = "knownPositionField";
 
     private CssClassNames() {
     }

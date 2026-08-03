@@ -16,6 +16,7 @@ import net.tjh90.website.core.Point;
 import net.tjh90.website.core.anascramble.CharacterData;
 import net.tjh90.website.core.anascramble.CharacterScrambler;
 import net.tjh90.website.ui.components.ScrambledCharacter;
+import net.tjh90.website.ui.views.CssClassNames;
 
 /// Defines UI logic for the [AnascrambleView]. Uses [AnascrambleModel] as the data model.
 public class AnascrambleViewModel {
@@ -112,6 +113,7 @@ public class AnascrambleViewModel {
             field.setWidth("2.5em");
             field.setAllowedCharPattern(POSITION_PATTERN);
             field.setValueChangeMode(ValueChangeMode.EAGER);
+            field.addClassName(CssClassNames.KNOWN_POSITION_FIELD);
 
             int pos = i;
             field.addValueChangeListener(e -> onPositionFieldChanged(pos, e.getValue()));

@@ -27,8 +27,9 @@ public class AnascrambleView extends VerticalLayout implements HasTitle {
 
     private static final String TITLE = "Anascramble";
 
-    private static final String SCRAMBLE_FLD_LBL = "Letters to scramble";
-    private static final String SCRAMBLE_BTN_TEXT = "Scramble!";
+    static final String SCRAMBLE_FLD_LBL = "Letters to scramble";
+    static final String SCRAMBLE_BTN_TEXT = "Scramble!";
+
     private static final String KNOWN_POSITIONS_LABEL_TEXT = "Solution:";
 
     private static final float SCRAMBLE_CONTAINER_SIZE = 400.0f;
