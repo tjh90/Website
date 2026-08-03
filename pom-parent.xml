@@ -17,7 +17,7 @@
         <playwright.version>1.61.0</playwright.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.version>4.1.0</spring.version>
-        <vaadin.version>25.2.3</vaadin.version>
+        <vaadin.version>25.2.4</vaadin.version>
     </properties>
 
     <dependencyManagement>
