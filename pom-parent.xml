@@ -10,6 +10,7 @@
     <name>Parent</name>
 
     <properties>
+        <commonmark.version>0.30.0</commonmark.version>
         <junit.version>6.1.2</junit.version>
         <maven.compiler.release>25</maven.compiler.release>
         <maven.compiler.source>25</maven.compiler.source>
@@ -28,6 +29,18 @@
                 <version>${vaadin.version}</version>
                 <scope>import</scope>
                 <type>pom</type>
+            </dependency>
+
+            <dependency>
+                <groupId>org.commonmark</groupId>
+                <artifactId>commonmark</artifactId>
+                <version>${commonmark.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.commonmark</groupId>
+                <artifactId>commonmark-ext-yaml-front-matter</artifactId>
+                <version>${commonmark.version}</version>
             </dependency>
 
             <dependency>
