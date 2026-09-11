@@ -5,11 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -17,8 +12,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class RecipesLoaderTest {
-
-  private static final String TEST_RESOURCE_DIR = "/recipes/";
 
   private List<Recipe> recipes;
 
@@ -65,11 +58,11 @@ public class RecipesLoaderTest {
   }
 
   @Test
-  public void contentIsTheRawMarkdownOfTheRecipeFile() {
-    assertEquals(readTestResource("TestMojito.md"), recipe("Mojito").content());
-    assertEquals(
-        readTestResource("TestSpaghettiCarbonara.md"), recipe("Spaghetti Carbonara").content());
-    assertEquals(readTestResource("TestRoastedPotatoes.md"), recipe("Roasted Potatoes").content());
+  public void contentIsParsedFromEachRecipeFile() {
+    assertTrue(recipe("Mojito").toHtml().contains("<h1>Mojito</h1>"));
+    assertTrue(recipe("Spaghetti Carbonara").toHtml().contains("<h1>Spaghetti Carbonara</h1>"));
+    assertTrue(recipe("Roasted Potatoes").toHtml().contains("<h1>Roasted Potatoes</h1>"));
+    assertFalse(recipe("Mojito").toHtml().contains("---"));
   }
 
   private Set<String> recipeNames() {
@@ -90,21 +83,5 @@ public class RecipesLoaderTest {
         .findFirst()
         .orElseThrow(
             () -> new AssertionError("No ingredient named " + name + " in " + ingredients));
-  }
-
-  private static String readTestResource(String fileName) {
-    String path = TEST_RESOURCE_DIR + fileName;
-    try (InputStream is = RecipesLoaderTest.class.getResourceAsStream(path)) {
-      if (is == null) {
-        throw new AssertionError("Missing test resource: " + path);
-      }
-
-      try (BufferedReader br =
-          new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
-        return br.lines().reduce("", (content, line) -> content + line + "\n");
-      }
-    } catch (IOException e) {
-      throw new AssertionError("Failed to read test resource: " + path, e);
-    }
   }
 }

@@ -29,10 +29,6 @@ public class SimpleIngredient implements Ingredient {
 
   @Override
   public boolean matches(String name) {
-    if (name == null) {
-      return false;
-    }
-
-    return name.equals(this.name);
+    return IngredientMatcher.matches(this.name, name);
   }
 }

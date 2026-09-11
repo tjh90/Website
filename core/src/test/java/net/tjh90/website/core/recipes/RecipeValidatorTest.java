@@ -1,12 +1,12 @@
 package net.tjh90.website.core.recipes;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 import java.util.Set;
+import org.commonmark.node.Document;
 import org.junit.jupiter.api.Test;
 
 public class RecipeValidatorTest {
@@ -14,8 +14,10 @@ public class RecipeValidatorTest {
   private static final Set<String> ALLOWED_INGREDIENTS =
       Set.of("Water", "Ice cubes", "Lime", "Sugar", "Simple syrup");
 
+  private static final Document EMPTY_DOCUMENT = new Document();
+
   private static final Recipe SIMPLE_RECIPE =
-      new Recipe("Tap water", Recipe.Type.DRINK, List.of(ingredient("Water")), "");
+      new Recipe("Tap water", Recipe.Type.DRINK, List.of(ingredient("Water")), EMPTY_DOCUMENT);
 
   private final RecipeValidator validator = new RecipeValidator(ALLOWED_INGREDIENTS);
 
@@ -26,7 +28,7 @@ public class RecipeValidatorTest {
             "Mojito",
             Recipe.Type.DRINK,
             List.of(ingredient("Water"), ingredient("Ice cubes"), ingredient("Lime")),
-            "");
+            EMPTY_DOCUMENT);
 
     assertDoesNotThrow(() -> validator.validate(List.of(SIMPLE_RECIPE, recipe)));
   }
@@ -38,7 +40,7 @@ public class RecipeValidatorTest {
             "Suspicious Drink",
             Recipe.Type.DRINK,
             List.of(ingredient("Water"), ingredient("Cocaine")),
-            "");
+            EMPTY_DOCUMENT);
 
     RecipeException exception =
         assertThrows(RecipeException.class, () -> validator.validate(List.of(recipe)));
@@ -49,7 +51,8 @@ public class RecipeValidatorTest {
   @Test
   public void choiceIngredientIsValidWhenAnyAlternativeIsAllowlisted() {
     Recipe recipe =
-        new Recipe("Mojito", Recipe.Type.DRINK, List.of(choice("Water", "Cocaine")), "");
+        new Recipe(
+            "Mojito", Recipe.Type.DRINK, List.of(choice("Water", "Cocaine")), EMPTY_DOCUMENT);
 
     assertDoesNotThrow(() -> validator.validate(List.of(recipe)));
   }
@@ -57,7 +60,11 @@ public class RecipeValidatorTest {
   @Test
   public void choiceIngredientIsInvalidWhenNoAlternativeIsAllowlisted() {
     Recipe recipe =
-        new Recipe("Suspicious Drink", Recipe.Type.DRINK, List.of(choice("Cocaine", "Heroin")), "");
+        new Recipe(
+            "Suspicious Drink",
+            Recipe.Type.DRINK,
+            List.of(choice("Cocaine", "Heroin")),
+            EMPTY_DOCUMENT);
 
     RecipeException exception =
         assertThrows(RecipeException.class, () -> validator.validate(List.of(recipe)));
@@ -67,9 +74,11 @@ public class RecipeValidatorTest {
   @Test
   public void reportsEveryRecipeWithAnOffendingIngredient() {
     Recipe badDrink =
-        new Recipe("Suspicious Drink", Recipe.Type.DRINK, List.of(ingredient("Cocaine")), "");
+        new Recipe(
+            "Suspicious Drink", Recipe.Type.DRINK, List.of(ingredient("Cocaine")), EMPTY_DOCUMENT);
     Recipe badSide =
-        new Recipe("Suspicious Side", Recipe.Type.SIDE, List.of(ingredient("Heroin")), "");
+        new Recipe(
+            "Suspicious Side", Recipe.Type.SIDE, List.of(ingredient("Heroin")), EMPTY_DOCUMENT);
 
     RecipeException exception =
         assertThrows(RecipeException.class, () -> validator.validate(List.of(badDrink, badSide)));
@@ -81,13 +90,12 @@ public class RecipeValidatorTest {
   }
 
   @Test
-  public void matchingIsCaseSensitive() {
+  public void matchingIsCaseInsensitive() {
     Recipe recipe =
-        new Recipe("Water Mislabeled", Recipe.Type.DRINK, List.of(ingredient("water")), "");
+        new Recipe(
+            "Water Mislabeled", Recipe.Type.DRINK, List.of(ingredient("water")), EMPTY_DOCUMENT);
 
-    RecipeException exception =
-        assertThrows(RecipeException.class, () -> validator.validate(List.of(recipe)));
-    assertEquals(1, exception.getMessage().split("\n").length);
+    assertDoesNotThrow(() -> validator.validate(List.of(recipe)));
   }
 
   private static SimpleIngredient ingredient(String name) {

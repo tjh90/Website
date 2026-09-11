@@ -39,3 +39,65 @@ div.scrambleContainer > i {
 div.scrambleContainer > i.dimmed {
     opacity: 0.25;
 }
+
+vaadin-app-layout {
+    height: 100%;
+}
+
+vaadin-vertical-layout.recipeListPanel {
+    border-right: 2px solid var(--lumo-primary-color);
+    padding-right: var(--lumo-space-s);
+}
+
+vaadin-vertical-layout.recipeFilters {
+    width: 100%;
+    padding: 0;
+    margin-bottom: var(--lumo-space-l);
+    --vaadin-vertical-layout-gap: 0;
+}
+
+vaadin-vertical-layout.recipeFilters h5 {
+    margin: 0;
+}
+
+div.recipeFilterGroup {
+    flex-direction: column;
+    width: 100%;
+    margin: var(--lumo-space-s) 0;
+}
+
+vaadin-horizontal-layout.recipeTypeFilters {
+    flex-wrap: wrap;
+    --vaadin-horizontal-layout-gap: var(--lumo-space-s);
+}
+
+vaadin-text-field.recipeFilterField {
+    --vaadin-text-field-default-width: 100%;
+}
+
+vaadin-list-box.recipeList vaadin-item::part(checkmark) {
+    display: none;
+}
+
+vaadin-list-box.recipeList vaadin-item[selected] {
+    background-color: var(--lumo-primary-color-10pct);
+}
+
+@media (max-width: 600px) {
+    vaadin-horizontal-layout.recipeLayout {
+        flex-direction: column;
+    }
+
+    vaadin-vertical-layout.recipeListPanel {
+        width: 100% !important;
+        height: 40% !important;
+        border-right: none;
+        border-bottom: 1px solid var(--lumo-contrast-10pct);
+    }
+
+    div.recipeContainer {
+        height: auto !important;
+        min-height: 0;
+        flex-grow: 1;
+    }
+}

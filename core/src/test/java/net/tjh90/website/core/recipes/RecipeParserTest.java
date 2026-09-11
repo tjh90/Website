@@ -2,11 +2,13 @@ package net.tjh90.website.core.recipes;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 import java.util.StringJoiner;
+import org.commonmark.node.Document;
 import org.junit.jupiter.api.Test;
 
 public class RecipeParserTest {
@@ -68,10 +70,12 @@ public class RecipeParserTest {
   }
 
   @Test
-  public void recipeContentIsTheEntireMarkdown() {
+  public void recipeContentIsTheParsedMarkdownDocument() {
     Recipe recipe = RecipeParser.parse(TEST_RECIPE).orElseThrow();
 
-    assertEquals(TEST_RECIPE, recipe.content());
+    assertNotNull(recipe.content());
+    assertTrue(recipe.content() instanceof Document);
+    assertNotNull(recipe.content().getFirstChild());
   }
 
   @Test
@@ -108,6 +112,25 @@ public class RecipeParserTest {
     assertTrue(drugs instanceof IngredientChoice);
     assertTrue(drugs.matches("Cocaine"));
     assertFalse(drugs.matches(INGREDIENT_NAME_DRUGS));
+  }
+
+  @Test
+  public void toHtmlContainsTheExpectedMarkdownStructure() {
+    String html = parse(TEST_RECIPE).toHtml();
+
+    assertTrue(html.contains(String.format("<h1>%s</h1>", TEST_RECIPE_NAME)));
+    assertTrue(html.contains("<h2>Ingredients</h2>"));
+    assertTrue(html.contains("<h2>Method</h2>"));
+    assertTrue(html.contains(String.format("<li>%s</li>", INGREDIENT_DRUGS)));
+    assertTrue(html.contains("<ol>"));
+  }
+
+  @Test
+  public void toHtmlOmitsTheYamlFrontMatter() {
+    String html = parse(TEST_RECIPE).toHtml();
+
+    assertFalse(html.contains("---"));
+    assertFalse(html.contains("type"));
   }
 
   private static Recipe parse(String recipeMarkdown) {

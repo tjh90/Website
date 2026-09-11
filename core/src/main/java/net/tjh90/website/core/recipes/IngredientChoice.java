@@ -31,10 +31,6 @@ public class IngredientChoice implements Ingredient {
 
   @Override
   public boolean matches(String name) {
-    if (name == null || names == null) {
-      return false;
-    }
-
-    return names.contains(name);
+    return names.stream().anyMatch(candidate -> IngredientMatcher.matches(candidate, name));
   }
 }

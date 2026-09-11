@@ -15,6 +15,7 @@ import com.vaadin.flow.router.Layout;
 import net.tjh90.website.ui.views.anascramble.AnascrambleView;
 import net.tjh90.website.ui.views.home.HomeView;
 import net.tjh90.website.ui.views.privacy.PrivacyView;
+import net.tjh90.website.ui.views.recipes.RecipesView;
 
 /// Defines the main application view elements.
 @Layout
@@ -54,6 +55,7 @@ public class MainView extends AppLayout implements AfterNavigationObserver {
 
     mainNav.addItem(new SideNavItem(HomeView.NAV_LABEL, HomeView.class));
     mainNav.addItem(new SideNavItem(AnascrambleView.NAV_LABEL, AnascrambleView.class));
+    mainNav.addItem(new SideNavItem(RecipesView.NAV_LABEL, RecipesView.class));
 
     darkModeItem.setSuffixComponent(darkModeCheckbox);
     mainNav.addItem(darkModeItem);

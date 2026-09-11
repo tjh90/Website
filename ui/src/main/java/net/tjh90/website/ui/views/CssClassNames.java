@@ -15,6 +15,15 @@ public class CssClassNames {
   public static final String SCRAMBLE_CONTAINER = "scrambleContainer";
   public static final String KNOWN_POSITION_FIELD = "knownPositionField";
 
+  // Recipes.
+  public static final String RECIPE_LAYOUT = "recipeLayout";
+  public static final String RECIPE_LIST_PANEL = "recipeListPanel";
+  public static final String RECIPE_LIST = "recipeList";
+  public static final String RECIPE_FILTERS = "recipeFilters";
+  public static final String RECIPE_FILTER_GROUP = "recipeFilterGroup";
+  public static final String RECIPE_FILTER_FIELD = "recipeFilterField";
+  public static final String RECIPE_TYPE_FILTERS = "recipeTypeFilters";
+
   private CssClassNames() {
     // Private constructor to prevent instantiation.
   }

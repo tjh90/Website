@@ -15,6 +15,7 @@ module net.tjh90.website.ui {
   requires vaadin.app.layout.flow;
   requires vaadin.button.flow;
   requires vaadin.checkbox.flow;
+  requires vaadin.list.box.flow;
   requires vaadin.lumo.theme;
   requires vaadin.ordered.layout.flow;
   requires vaadin.side.nav.flow;

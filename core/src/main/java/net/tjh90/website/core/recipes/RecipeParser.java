@@ -39,7 +39,7 @@ public class RecipeParser {
       return Optional.empty();
     }
 
-    return Optional.of(new Recipe(name, type, ingredients, markdown));
+    return Optional.of(new Recipe(name, type, ingredients, document));
   }
 
   private static String parseName(Node document) {
