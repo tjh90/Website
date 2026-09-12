@@ -47,7 +47,7 @@ public class RecipesLoader {
   private static List<String> getRecipeMarkdownPaths() {
     URL recipesDirUrl = RecipesLoader.class.getResource(RECIPES_DIR);
     if (recipesDirUrl == null) {
-      throw new RecipeLoadException("Recipes directory not found: " + RECIPES_DIR);
+      throw new RecipeException("Recipes directory not found: " + RECIPES_DIR);
     }
 
     String protocol = recipesDirUrl.getProtocol();
@@ -55,7 +55,7 @@ public class RecipesLoader {
       case FILE_PROTOCOL -> listFileRecipes(recipesDirUrl);
       case JAR_PROTOCOL -> listJarRecipes(recipesDirUrl);
       default ->
-          throw new RecipeLoadException("Unsupported protocol for recipes directory: " + protocol);
+          throw new RecipeException("Unsupported protocol for recipes directory: " + protocol);
     };
   }
 
@@ -80,12 +80,12 @@ public class RecipesLoader {
     try {
       return Path.of(recipesDirUrl.toURI());
     } catch (URISyntaxException e) {
-      throw new RecipeLoadException("Invalid recipes directory URL: " + recipesDirUrl, e);
+      throw new RecipeException("Invalid recipes directory URL: " + recipesDirUrl, e);
     }
   }
 
-  private static final RecipeLoadException createRecipeDirException(Throwable cause) {
-    return new RecipeLoadException("Failed to read recipes directory: " + RECIPES_DIR, cause);
+  private static final RecipeException createRecipeDirException(Throwable cause) {
+    return new RecipeException("Failed to read recipes directory: " + RECIPES_DIR, cause);
   }
 
   private static List<String> listJarRecipes(URL recipesDirUrl) {
@@ -120,7 +120,7 @@ public class RecipesLoader {
   private static String readMarkdownFile(String path) {
     try (InputStream is = RecipesLoader.class.getResourceAsStream(path)) {
       if (is == null) {
-        throw new RecipeLoadException("Recipe not found: " + path);
+        throw new RecipeException("Recipe not found: " + path);
       }
 
       try (BufferedReader br =
@@ -128,7 +128,7 @@ public class RecipesLoader {
         return br.lines().reduce("", (content, line) -> content + line + "\n");
       }
     } catch (IOException e) {
-      throw new RecipeLoadException("Failed to read recipe: " + path, e);
+      throw new RecipeException("Failed to read recipe: " + path, e);
     }
   }
 }
