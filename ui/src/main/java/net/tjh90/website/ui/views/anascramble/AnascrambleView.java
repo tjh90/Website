@@ -1,7 +1,5 @@
 package net.tjh90.website.ui.views.anascramble;
 
-import java.util.List;
-
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
@@ -15,7 +13,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.dom.Style;
 import com.vaadin.flow.dom.Style.Position;
 import com.vaadin.flow.router.Route;
-
+import java.util.List;
 import net.tjh90.website.ui.HasTitle;
 import net.tjh90.website.ui.views.CssClassNames;
 
@@ -23,97 +21,97 @@ import net.tjh90.website.ui.views.CssClassNames;
 @Route(AnascrambleView.ROUTE)
 public class AnascrambleView extends VerticalLayout implements HasTitle {
 
-    public static final String ROUTE = "anascramble";
+  public static final String ROUTE = "anascramble";
 
-    public static final String NAV_LABEL = "Anascramble";
-    public static final String TITLE = "Anascramble";
+  public static final String NAV_LABEL = "Anascramble";
+  public static final String TITLE = "Anascramble";
 
-    static final String SCRAMBLE_FLD_LBL = "Letters to scramble";
-    static final String SCRAMBLE_BTN_TEXT = "Scramble!";
+  static final String SCRAMBLE_FLD_LBL = "Letters to scramble";
+  static final String SCRAMBLE_BTN_TEXT = "Scramble!";
 
-    private static final String KNOWN_POSITIONS_LABEL_TEXT = "Solution:";
+  private static final String KNOWN_POSITIONS_LABEL_TEXT = "Solution:";
 
-    private static final float SCRAMBLE_CONTAINER_SIZE = 400.0f;
+  private static final float SCRAMBLE_CONTAINER_SIZE = 400.0f;
 
-    private final TextField lettersFld = new TextField(SCRAMBLE_FLD_LBL);
-    private final Button scrambleBtn = new Button(SCRAMBLE_BTN_TEXT);
-    private final Div scrambleContainer = new Div();
-    private final HorizontalLayout knownPositionsLayout = new HorizontalLayout();
-    private final Span knownPositionsLabel = new Span(KNOWN_POSITIONS_LABEL_TEXT);
+  private final TextField lettersFld = new TextField(SCRAMBLE_FLD_LBL);
+  private final Button scrambleBtn = new Button(SCRAMBLE_BTN_TEXT);
+  private final Div scrambleContainer = new Div();
+  private final HorizontalLayout knownPositionsLayout = new HorizontalLayout();
+  private final Span knownPositionsLabel = new Span(KNOWN_POSITIONS_LABEL_TEXT);
 
-    @SuppressWarnings("unused")
-    private final AnascrambleViewModel viewModel;
+  @SuppressWarnings("unused")
+  private final AnascrambleViewModel viewModel;
 
-    public AnascrambleView() {
-        setPadding(true);
-        setWidthFull();
-        setDefaultHorizontalComponentAlignment(Alignment.CENTER);
+  public AnascrambleView() {
+    setPadding(true);
+    setWidthFull();
+    setDefaultHorizontalComponentAlignment(Alignment.CENTER);
 
-        // Add container for scrambled letters.
-        scrambleContainer.setWidth(SCRAMBLE_CONTAINER_SIZE, Unit.PIXELS);
-        scrambleContainer.setHeight(SCRAMBLE_CONTAINER_SIZE, Unit.PIXELS);
-        scrambleContainer.setClassName(CssClassNames.SCRAMBLE_CONTAINER);
-        Style style = scrambleContainer.getStyle();
-        if (style != null) {
-            style.setPosition(Position.RELATIVE);
-        }
-        add(scrambleContainer);
-
-        // Add known positions layout (hidden until letters are entered).
-        knownPositionsLayout.setWidthFull();
-        knownPositionsLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
-        knownPositionsLayout.getStyle().set("flex-wrap", "wrap");
-        knownPositionsLayout.getStyle().set("justify-content", "center");
-        knownPositionsLayout.add(knownPositionsLabel);
-        knownPositionsLayout.setVisible(false);
-        add(knownPositionsLayout);
-
-        // Add entry field.
-        add(lettersFld);
-
-        // Add scramble button.
-        scrambleBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        add(scrambleBtn);
-
-        viewModel = new AnascrambleViewModel(this, new AnascrambleModel());
+    // Add container for scrambled letters.
+    scrambleContainer.setWidth(SCRAMBLE_CONTAINER_SIZE, Unit.PIXELS);
+    scrambleContainer.setHeight(SCRAMBLE_CONTAINER_SIZE, Unit.PIXELS);
+    scrambleContainer.setClassName(CssClassNames.SCRAMBLE_CONTAINER);
+    Style style = scrambleContainer.getStyle();
+    if (style != null) {
+      style.setPosition(Position.RELATIVE);
     }
+    add(scrambleContainer);
 
-    @Override
-    public String getTitle() {
-        return TITLE;
-    }
+    // Add known positions layout (hidden until letters are entered).
+    knownPositionsLayout.setWidthFull();
+    knownPositionsLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+    knownPositionsLayout.getStyle().set("flex-wrap", "wrap");
+    knownPositionsLayout.getStyle().set("justify-content", "center");
+    knownPositionsLayout.add(knownPositionsLabel);
+    knownPositionsLayout.setVisible(false);
+    add(knownPositionsLayout);
 
-    public void setScrambledLetters(final List<Component> scrambledLetters) {
-        scrambleContainer.removeAll();
-        scrambleContainer.add(scrambledLetters);
-    }
+    // Add entry field.
+    add(lettersFld);
 
-    public void clearScrambledLetters() {
-        scrambleContainer.removeAll();
-    }
+    // Add scramble button.
+    scrambleBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+    add(scrambleBtn);
 
-    public void setPositionFields(final List<TextField> fields) {
-        knownPositionsLayout.removeAll();
-        knownPositionsLayout.add(knownPositionsLabel);
-        knownPositionsLayout.add(fields.toArray(TextField[]::new));
-        knownPositionsLayout.setVisible(true);
-    }
+    viewModel = new AnascrambleViewModel(this, new AnascrambleModel());
+  }
 
-    public void clearPositionFields() {
-        knownPositionsLayout.removeAll();
-        knownPositionsLayout.add(knownPositionsLabel);
-        knownPositionsLayout.setVisible(false);
-    }
+  @Override
+  public String getTitle() {
+    return TITLE;
+  }
 
-    TextField getLettersFld() {
-        return lettersFld;
-    }
+  public void setScrambledLetters(final List<Component> scrambledLetters) {
+    scrambleContainer.removeAll();
+    scrambleContainer.add(scrambledLetters);
+  }
 
-    Button getScrambleBtn() {
-        return scrambleBtn;
-    }
+  public void clearScrambledLetters() {
+    scrambleContainer.removeAll();
+  }
 
-    float getScrambleContainerSize() {
-        return SCRAMBLE_CONTAINER_SIZE;
-    }
+  public void setPositionFields(final List<TextField> fields) {
+    knownPositionsLayout.removeAll();
+    knownPositionsLayout.add(knownPositionsLabel);
+    knownPositionsLayout.add(fields.toArray(TextField[]::new));
+    knownPositionsLayout.setVisible(true);
+  }
+
+  public void clearPositionFields() {
+    knownPositionsLayout.removeAll();
+    knownPositionsLayout.add(knownPositionsLabel);
+    knownPositionsLayout.setVisible(false);
+  }
+
+  TextField getLettersFld() {
+    return lettersFld;
+  }
+
+  Button getScrambleBtn() {
+    return scrambleBtn;
+  }
+
+  float getScrambleContainerSize() {
+    return SCRAMBLE_CONTAINER_SIZE;
+  }
 }

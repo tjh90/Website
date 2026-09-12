@@ -8,15 +8,15 @@ import com.vaadin.flow.dom.Element;
 @Tag("i")
 class Icon extends Component {
 
-    private static final String ATTR_CLASS = "class";
+  private static final String ATTR_CLASS = "class";
 
-    /// Constructor
-    ///
-    /// @param cssClassName the Font Awesome class name for the icon.
-    public Icon(final String cssClassName) {
-        Element element = getElement();
-        if (element != null) {
-            element.setAttribute(ATTR_CLASS, cssClassName);
-        }
+  /// Constructor
+  ///
+  /// @param cssClassName the Font Awesome class name for the icon.
+  public Icon(final String cssClassName) {
+    Element element = getElement();
+    if (element != null) {
+      element.setAttribute(ATTR_CLASS, cssClassName);
     }
+  }
 }
