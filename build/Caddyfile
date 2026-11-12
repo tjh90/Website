@@ -1,0 +1,13 @@
+# Caddy obtains and renews certificates automatically for SITE_DOMAIN from Let's Encrypt
+# (LETSENCRYPT_CA), and permanently redirects HTTP to HTTPS (308). For `localhost` it uses its own
+# internal CA instead. HSTS must be added explicitly.
+{
+	email {$LETSENCRYPT_EMAIL}
+	acme_ca {$LETSENCRYPT_CA:https://acme-v02.api.letsencrypt.org/directory}
+}
+
+{$SITE_DOMAIN:localhost} {
+	encode zstd gzip
+	header Strict-Transport-Security "max-age=31536000; includeSubDomains"
+	reverse_proxy website:8000
+}

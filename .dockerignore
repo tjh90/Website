@@ -1,0 +1,22 @@
+# Build context is the repository root; only the package sources are needed.
+
+# Caches and local environments
+**/__pycache__
+.pytest_cache
+.ruff_cache
+.venv
+
+# Secrets
+build/.env
+
+# Test output
+reports
+test-results
+
+# Tooling, docs and tests (not needed in the image)
+.claude
+.git
+.github
+.specify
+specs
+tests

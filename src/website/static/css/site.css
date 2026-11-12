@@ -1,0 +1,221 @@
+/* Theme tokens: every colour is defined here so a dark theme can override them later. */
+:root {
+  --color-bg: #fff;
+  --color-text: #1a1a1a;
+  --color-link: #1a4fbf;
+  --color-header-bg: rgb(64 128 255);
+  --color-header-text: #fff;
+  --color-focus: #1a4fbf;
+  --color-icon: #000;
+  --color-nav-current-bg: #1a4fbf;
+  --color-nav-current-text: #fff;
+  --color-nav-hover-bg: #dbe6ff;
+  --menu-button-size: 44px;
+  --space: 1rem;
+  --header-height: 3.75rem;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: system-ui, sans-serif;
+  line-height: 1.5;
+}
+
+a {
+  color: var(--color-link);
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+.skip-link {
+  position: absolute;
+  left: var(--space);
+  top: -100%;
+  padding: 0.5rem 1rem;
+  background: var(--color-bg);
+  color: var(--color-link);
+  z-index: 1;
+}
+
+.skip-link:focus {
+  top: var(--space);
+}
+
+/* Three columns (menu button, title, empty column of the same width) keep the title centred. */
+.site-header {
+  display: grid;
+  grid-template-columns: var(--menu-button-size) 1fr var(--menu-button-size);
+  align-items: center;
+  gap: var(--space);
+  min-height: var(--header-height);
+  background: var(--color-header-bg);
+  color: var(--color-header-text);
+  padding: 0.5rem var(--space);
+}
+
+/* Navigation drawer (native popover, no JavaScript). It opens below the header so the menu
+   button stays reachable to close it again. */
+.menu-button {
+  display: inline-grid;
+  place-items: center;
+  min-width: var(--menu-button-size);
+  min-height: var(--menu-button-size);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.menu-button .icon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.menu-button:focus-visible {
+  outline-color: var(--color-header-text);
+}
+
+.drawer[popover] {
+  position: fixed;
+  inset: var(--header-height) auto 0 0;
+  margin: 0;
+  width: min(18rem, 85vw);
+  height: calc(100dvh - var(--header-height));
+  max-height: none;
+  border: 0;
+  padding: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  box-shadow: 0.25rem 0 1rem rgb(0 0 0 / 25%);
+}
+
+.drawer::backdrop {
+  background: rgb(0 0 0 / 30%);
+}
+
+/* Items stack from the top; the last item (About) is pinned to the bottom of the drawer. */
+.drawer ul {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.drawer li:last-child {
+  margin-block-start: auto;
+}
+
+.drawer a {
+  display: block;
+  padding: 0.75rem calc(var(--space) + 1rem);
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.drawer a:hover {
+  background: var(--color-nav-hover-bg);
+}
+
+.drawer a[aria-current="page"] {
+  background: var(--color-nav-current-bg);
+  color: var(--color-nav-current-text);
+  font-weight: bold;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .drawer[popover] {
+    transition: translate 0.2s ease-out, overlay 0.2s allow-discrete, display 0.2s allow-discrete;
+    translate: 0 0;
+  }
+
+  @starting-style {
+    .drawer[popover]:popover-open {
+      translate: -100% 0;
+    }
+  }
+
+  .drawer[popover]:not(:popover-open) {
+    translate: -100% 0;
+  }
+}
+
+.site-header h1 {
+  grid-column: 2;
+  margin: 0;
+  font-size: 1.75rem;
+  text-align: center;
+}
+
+main {
+  padding: var(--space);
+}
+
+/* Every page's content sections share the same indentation (set by the home page). */
+main section {
+  padding-inline: 20px;
+}
+
+/* Home page */
+.icon {
+  width: 1.25em;
+  height: 1.25em;
+  flex: none;
+}
+
+.home {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space);
+}
+
+.links ul {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0 1.5rem;
+}
+
+.links .icon {
+  color: var(--color-icon);
+}
+
+.links li a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-block: 0.375rem;
+}
+
+.painting {
+  margin: 0;
+}
+
+@media (min-width: 768px) {
+  .home {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+
+  .painting {
+    flex: 0 1 746px;
+  }
+}

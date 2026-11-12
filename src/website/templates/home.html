@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% set page_title = site_title %}
+{% set current_page = "home" %}
+{% block content %}
+<div class="home">
+  <section class="links" aria-labelledby="links-heading">
+    <h2 id="links-heading">Links:</h2>
+    <ul>
+      {% for link in external_links %}
+      <li><a href="{{ link.url }}" target="_blank" rel="noopener noreferrer">{% include "icons/" ~ link.icon %}{{ link.text }}</a></li>
+      {% endfor %}
+    </ul>
+  </section>
+  <figure class="painting">
+    <img src="{{ url_for('static', path='img/sisley.jpg').path }}" alt="{{ painting_alt }}" width="746" height="600">
+  </figure>
+</div>
+{% endblock %}
