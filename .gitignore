@@ -1,1 +1,15 @@
+# Environment
 .env
+build/.env
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+dist/
+
+# Tool caches and reports
+.pytest_cache/
+.ruff_cache/
+reports/
+test-results/

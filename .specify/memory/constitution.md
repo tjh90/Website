@@ -1,11 +1,12 @@
 <!--
 Sync Impact Report
 ==================
-Version change: 1.0.0 → 1.0.1 (PATCH: clarification)
+Version change: 1.0.1 → 1.0.2 (PATCH: currency updates, no change to any MUST rule)
 Modified principles:
-  - II. Server-Rendered UI, No Hand-Written JavaScript: the HTMX mandate now covers server-driven
-    interactivity only; purely client-side UI state uses native HTML features (Popover API,
-    <details>, <dialog>); htmx is vendored only once a feature needs it.
+  - I. Modern Python Toolchain: "currently 3.14" → "currently 3.15" (latest stable CPython).
+Modified sections:
+  - Development Workflow & Quality Gates: removed the RECOMMENDED pre-commit hooks line; the CI
+    quality gates already enforce Ruff and ty, and the hooks were removed from the repository.
 Added sections: None
 Removed sections: None
 Templates requiring updates: None (templates read the constitution at runtime)
@@ -19,7 +20,7 @@ Follow-up TODOs: None
 ### I. Modern Python Toolchain
 
 - The application MUST be written in Python, targeting the latest stable CPython release
-  (currently 3.14), declared via `requires-python` in `pyproject.toml`.
+  (currently 3.15), declared via `requires-python` in `pyproject.toml`.
 - uv MUST be the sole tool for Python installation, dependency management, virtual environments
   and task execution. `pyproject.toml` and `uv.lock` MUST be committed; ad-hoc `pip install`
   or `requirements.txt` files are prohibited.
@@ -149,7 +150,6 @@ push and pull request to the default branch (using `astral-sh/setup-uv`):
 
 - Changes MUST be made on feature branches and merged to the default branch via pull request.
 - Commits SHOULD follow Conventional Commits (`feat:`, `fix:`, `docs:`, `chore:` ...).
-- pre-commit hooks for Ruff and ty are RECOMMENDED to catch failures before CI.
 
 ## Governance
 
@@ -166,4 +166,4 @@ push and pull request to the default branch (using `astral-sh/setup-uv`):
   page's Credits section. `README.md`
   MUST be kept current with build, test and deployment instructions.
 
-**Version**: 1.0.1 | **Ratified**: 2026-11-12 | **Last Amended**: 2026-11-12
+**Version**: 1.0.2 | **Ratified**: 2026-11-12 | **Last Amended**: 2026-11-14

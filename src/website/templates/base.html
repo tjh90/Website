@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ tab_title(page_title) }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', path='css/site.css').path }}">
+  <link rel="icon" href="/favicon.ico">
+</head>
+<body>
+  <a class="skip-link" href="#content">Skip to content</a>
+  <header class="site-header">
+    <button type="button" class="menu-button" popovertarget="nav-drawer" aria-label="Menu">
+      {%- include "icons/bars.svg" -%}
+    </button>
+    <h1>{{ page_title }}</h1>
+  </header>
+  <nav id="nav-drawer" class="drawer" popover aria-label="Main">
+    <ul>
+      {% for p in nav_pages %}
+      <li><a href="{{ p.path }}"{% if p.name == current_page %} aria-current="page"{% endif %}>{{ p.nav_label }}</a></li>
+      {% endfor %}
+    </ul>
+  </nav>
+  <main id="content">
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>
