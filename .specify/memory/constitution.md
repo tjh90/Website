@@ -1,18 +1,12 @@
 <!--
 Sync Impact Report
 ==================
-Version change: (unversioned template) → 1.0.0
-Modified principles: N/A (initial ratification)
-  - [PRINCIPLE_1_NAME] → I. Modern Python Toolchain
-  - [PRINCIPLE_2_NAME] → II. Server-Rendered UI, No Hand-Written JavaScript
-  - [PRINCIPLE_3_NAME] → III. Type Safety & Code Style
-  - [PRINCIPLE_4_NAME] → IV. Automated Testing & UI Verification (NON-NEGOTIABLE)
-  - [PRINCIPLE_5_NAME] → V. Simplicity
-  - (new) VI. Licence Compliance & Attribution
-Added sections:
-  - Technology & Deployment Constraints
-  - Development Workflow & Quality Gates
-  - Governance (filled)
+Version change: 1.0.0 → 1.0.1 (PATCH: clarification)
+Modified principles:
+  - II. Server-Rendered UI, No Hand-Written JavaScript: the HTMX mandate now covers server-driven
+    interactivity only; purely client-side UI state uses native HTML features (Popover API,
+    <details>, <dialog>); htmx is vendored only once a feature needs it.
+Added sections: None
 Removed sections: None
 Templates requiring updates: None (templates read the constitution at runtime)
 Follow-up TODOs: None
@@ -41,9 +35,13 @@ CI and in Docker, and keeps the stack current.
 
 - Pages MUST be rendered server-side as HTML. Business logic MUST live in Python, never in the
   browser.
-- Interactivity MUST be delivered with HTMX: server endpoints return HTML fragments that HTMX
-  swaps into the page. The htmx library MUST be vendored (served from the app's static files,
-  version-pinned) rather than loaded from a third-party CDN.
+- Server-driven interactivity (anything that needs data or HTML from the server without a full
+  page load) MUST be delivered with HTMX: server endpoints return HTML fragments that HTMX swaps
+  into the page. The htmx library MUST be vendored (served from the app's static files,
+  version-pinned) rather than loaded from a third-party CDN, and only once a feature needs it.
+- Purely client-side UI state (e.g. opening a menu, expanding a section) MUST use native HTML
+  features that need no JavaScript, such as the Popover API, `<details>`/`<summary>` or
+  `<dialog>` with invoker commands, in preference to HTMX or scripts.
 - The project MUST NOT contain hand-written JavaScript. Any unavoidable exception MUST be
   justified in the feature plan, kept minimal, and covered by Playwright tests.
 - Core content MUST remain usable without JavaScript (progressive enhancement) where
@@ -168,4 +166,4 @@ push and pull request to the default branch (using `astral-sh/setup-uv`):
   page's Credits section. `README.md`
   MUST be kept current with build, test and deployment instructions.
 
-**Version**: 1.0.0 | **Ratified**: 2026-11-12 | **Last Amended**: 2026-11-12
+**Version**: 1.0.1 | **Ratified**: 2026-11-12 | **Last Amended**: 2026-11-12
