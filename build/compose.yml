@@ -1,21 +1,39 @@
+name: website
+
 services:
   website:
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ..
+      dockerfile: build/Dockerfile
       target: website-run
-    ports:
-      - 8080:8080
+      args:
+        WEBSITE_REVISION: ${WEBSITE_REVISION:-}
+    image: website:latest
+    restart: unless-stopped
+    # Only reachable from the Compose network (via Caddy); no host ports are published.
+    expose:
+      - "8000"
 
-  nginx:
-    image: nginx
+  caddy:
+    image: caddy:2.11.9-alpine@sha256:0bbb055bda6793c999bde78b1b5ce3e89f829fb031af2cf50056ea1246559fee
     ports:
-      - 443:443
-      - 80:80
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    environment:
+      SITE_DOMAIN: ${SITE_DOMAIN:-localhost}
+      LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL:?Set LETSENCRYPT_EMAIL in build/.env (Let's Encrypt account contact)}
+      LETSENCRYPT_CA: ${LETSENCRYPT_CA:-https://acme-v02.api.letsencrypt.org/directory}
     volumes:
-      - type: bind
-        source: ./nginx.conf
-        target: /etc/nginx/nginx.conf
-      - type: bind
-        source: ./certs
-        target: /opt/certs
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      website:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  # Certificates and ACME account: keep this volume to avoid Let's Encrypt rate limits.
+  caddy_data: {}
+  caddy_config: {}

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% set page_title = "About" %}
+{% set current_page = "about" %}
+{% block content %}
+<section aria-labelledby="source-heading">
+  <h2 id="source-heading">Source code</h2>
+  <p>This website is free software licensed under the
+    <a href="{{ licence_url }}" target="_blank" rel="noopener noreferrer">{{ licence_name }}</a>.</p>
+  <p><a href="{{ build_info.repository_url }}" target="_blank" rel="noopener noreferrer">Source code on GitHub</a></p>
+  {% if build_info.revision %}
+  <p>Running revision
+    <a href="{{ build_info.revision_url }}" target="_blank" rel="noopener noreferrer"><code>{{ build_info.short_revision }}</code></a></p>
+  {% endif %}
+</section>
+<section aria-labelledby="cookies-heading">
+  <h2 id="cookies-heading">Cookies</h2>
+  <p>{{ cookie_statement }}</p>
+</section>
+<section aria-labelledby="credits-heading">
+  <h2 id="credits-heading">Credits</h2>
+  <ul>
+    {% for credit in credits %}
+    {% if credit.licence_url %}
+    <li>{% if credit.work_url %}<a href="{{ credit.work_url }}" target="_blank" rel="noopener noreferrer">{{ credit.work }}</a>{% else %}{{ credit.work }}{% endif %}
+      by {{ credit.author }}, licensed under <a href="{{ credit.licence_url }}" target="_blank" rel="noopener noreferrer">{{ credit.licence }}</a>.</li>
+    {% else %}
+    <li>{{ credit.author }}, {% if credit.work_url %}<a href="{{ credit.work_url }}" target="_blank" rel="noopener noreferrer">{{ credit.work }}</a>{% else %}{{ credit.work }}{% endif %}, {{ credit.licence | lower }}.</li>
+    {% endif %}
+    {% endfor %}
+  </ul>
+</section>
+{% endblock %}

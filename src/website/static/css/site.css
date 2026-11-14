@@ -1,0 +1,556 @@
+/* Handwritten display font for the Anascramble page (Rock Salt, Apache License 2.0; licence in
+   ../fonts/rock-salt-LICENSE.txt). */
+@font-face {
+  font-family: "Rock Salt";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/rock-salt-latin-400-normal.woff2") format("woff2");
+}
+
+/* Theme tokens: every colour is a light-dark() pair, and the color-scheme property on :root picks
+   which half applies. It follows the device preference by default; the Dark mode switch in the
+   drawer can flip it (see "Theme switch" below). color-scheme also themes scrollbars and form
+   controls. */
+:root {
+  color-scheme: light;
+  --color-bg: light-dark(#fff, #121417);
+  --color-text: light-dark(#1a1a1a, #e6e6e6);
+  --color-link: light-dark(#1a4fbf, #a8cfff);
+  --color-header-bg: light-dark(rgb(64 128 255), rgb(64 128 255));
+  --color-header-text: light-dark(#fff, #fff);
+  --color-focus: light-dark(#1a4fbf, #a8cfff);
+  --color-icon: light-dark(#000, #e6e6e6);
+  --color-nav-current-bg: light-dark(#1a4fbf, #c0e0ff);
+  --color-nav-current-text: light-dark(#fff, #121417);
+  --color-nav-hover-bg: light-dark(#dbe6ff, #1f2a44);
+  --menu-button-size: 44px;
+  --space: 1rem;
+  --header-height: 3.75rem;
+  /* Drawer slide durations, used by every drawer animation. */
+  --drawer-open-duration: 350ms;
+  --drawer-close-duration: 300ms;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: system-ui, sans-serif;
+  line-height: 1.5;
+}
+
+a {
+  color: var(--color-link);
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+.skip-link {
+  position: absolute;
+  left: var(--space);
+  top: -100%;
+  padding: 0.5rem 1rem;
+  background: var(--color-bg);
+  color: var(--color-link);
+  z-index: 1;
+}
+
+.skip-link:focus {
+  top: var(--space);
+}
+
+/* Three columns (menu button, title, empty column of the same width) keep the title centred. */
+.site-header {
+  display: grid;
+  grid-template-columns: var(--menu-button-size) 1fr var(--menu-button-size);
+  align-items: center;
+  gap: var(--space);
+  min-height: var(--header-height);
+  background: var(--color-header-bg);
+  color: var(--color-header-text);
+  padding: 0.5rem var(--space);
+}
+
+/* Navigation drawer (native popover, no JavaScript). It opens below the header so the menu
+   button stays reachable to close it again. */
+.menu-button {
+  display: inline-grid;
+  place-items: center;
+  min-width: var(--menu-button-size);
+  min-height: var(--menu-button-size);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.menu-button .icon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.menu-button:focus-visible {
+  outline-color: var(--color-header-text);
+}
+
+.drawer[popover] {
+  position: fixed;
+  inset: var(--header-height) auto 0 0;
+  margin: 0;
+  width: min(18rem, 85vw);
+  height: calc(100dvh - var(--header-height));
+  max-height: none;
+  border: 0;
+  padding: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  box-shadow: 0.25rem 0 1rem rgb(0 0 0 / 25%);
+}
+
+.drawer::backdrop {
+  background: rgb(0 0 0 / 30%);
+}
+
+/* Page links stack from the top; the Dark mode item and the last page (About) are pinned to the
+   bottom of the drawer, with Dark mode directly above About. */
+.drawer ul {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.drawer .theme-item {
+  margin-block-start: auto;
+}
+
+.drawer a {
+  display: block;
+  padding: 0.75rem calc(var(--space) + 1rem);
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.drawer a:hover {
+  background: var(--color-nav-hover-bg);
+}
+
+.drawer a[aria-current="page"] {
+  background: var(--color-nav-current-bg);
+  color: var(--color-nav-current-text);
+  font-weight: bold;
+}
+
+/* Theme switch. One switch per device preference; only the matching one is displayed (and so
+   exposed to assistive technology). Each starts in the state matching its device's theme, and
+   :has() flips color-scheme when the visible one is toggled. No JavaScript is involved. */
+.theme-switch {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space);
+  min-height: var(--menu-button-size);
+  padding: 0.75rem calc(var(--space) + 1rem);
+  cursor: pointer;
+}
+
+.theme-switch:hover {
+  background: var(--color-nav-hover-bg);
+}
+
+.theme-switch--dark-device {
+  display: none;
+}
+
+@media not (prefers-color-scheme: dark) {
+  :root:has(#dark-mode-light-device:checked) {
+    color-scheme: dark;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .theme-switch--light-device {
+    display: none;
+  }
+
+  .theme-switch--dark-device {
+    display: flex;
+  }
+
+  :root:has(#dark-mode-dark-device:not(:checked)) {
+    color-scheme: light;
+  }
+}
+
+/* The switch track and thumb, drawn with tokens so they follow the theme. */
+.theme-switch input {
+  appearance: none;
+  flex: none;
+  position: relative;
+  width: 2.75rem;
+  height: 1.5rem;
+  margin: 0;
+  border: 2px solid var(--color-text);
+  border-radius: 999px;
+  background: var(--color-bg);
+  cursor: pointer;
+}
+
+.theme-switch input::before {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  background: var(--color-text);
+}
+
+.theme-switch input:checked {
+  border-color: var(--color-nav-current-bg);
+  background: var(--color-nav-current-bg);
+}
+
+.theme-switch input:checked::before {
+  left: auto;
+  right: 2px;
+  background: var(--color-nav-current-text);
+}
+
+/* Drawer motion. Opening eases out over --drawer-open-duration; closing (menu button, Escape,
+   light dismiss) eases in over --drawer-close-duration. The closed state's transition is the one
+   that runs when closing, so each state carries its own timing.
+
+   Firefox cannot transition `display`, so a closing popover would vanish at once. Instead, the
+   closed drawer stays displayed, parked off-screen and `visibility: hidden` (which also removes it
+   from the tab order and accessibility tree). Visibility flips to hidden only once the slide-out
+   ends. `overlay` keeps the drawer and its backdrop in the top layer while closing where
+   supported (Chromium); elsewhere the z-index keeps the sliding drawer above the page. */
+@media (prefers-reduced-motion: no-preference) {
+  .drawer[popover] {
+    z-index: 10;
+    translate: 0 0;
+  }
+
+  .drawer[popover]:popover-open {
+    visibility: visible;
+    transition:
+      translate var(--drawer-open-duration) ease-out,
+      overlay var(--drawer-open-duration) ease-out allow-discrete,
+      visibility 0s;
+  }
+
+  .drawer[popover]:not(:popover-open) {
+    display: block;
+    visibility: hidden;
+    translate: -100% 0;
+    transition:
+      translate var(--drawer-close-duration) ease-in,
+      overlay var(--drawer-close-duration) ease-in allow-discrete,
+      visibility 0s linear var(--drawer-close-duration);
+  }
+
+  @starting-style {
+    .drawer[popover]:popover-open {
+      translate: -100% 0;
+    }
+  }
+
+  .drawer[popover]::backdrop {
+    opacity: 0;
+    transition:
+      opacity var(--drawer-close-duration) ease-in,
+      overlay var(--drawer-close-duration) ease-in allow-discrete,
+      display var(--drawer-close-duration) ease-in allow-discrete;
+  }
+
+  .drawer[popover]:popover-open::backdrop {
+    opacity: 1;
+    transition:
+      opacity var(--drawer-open-duration) ease-out,
+      overlay var(--drawer-open-duration) ease-out allow-discrete,
+      display var(--drawer-open-duration) ease-out allow-discrete;
+  }
+
+  @starting-style {
+    .drawer[popover]:popover-open::backdrop {
+      opacity: 0;
+    }
+  }
+}
+
+/* In-place navigation runs inside a view transition. The header stays put, the old drawer
+   slides out to the left, and the page content cross-fades quickly. */
+/* Only the open drawer is named: the closed drawer on the new page stays displayed (see above), and
+   naming it would make the group animate it too. */
+.drawer:popover-open {
+  view-transition-name: nav-drawer;
+}
+
+.site-header {
+  view-transition-name: site-header;
+}
+
+@keyframes drawer-slide-out {
+  from {
+    translate: 0 0;
+  }
+
+  to {
+    translate: -100% 0;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-old(nav-drawer) {
+    animation: drawer-slide-out var(--drawer-close-duration) ease-in both;
+  }
+
+  ::view-transition-new(nav-drawer) {
+    animation: none;
+  }
+
+  ::view-transition-group(root),
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 150ms;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none;
+  }
+}
+
+.site-header h1 {
+  grid-column: 2;
+  margin: 0;
+  font-size: 1.75rem;
+  text-align: center;
+}
+
+main {
+  padding: var(--space);
+}
+
+/* Every page's content sections share the same indentation (set by the home page). */
+main section {
+  padding-inline: 20px;
+}
+
+/* Home page */
+.icon {
+  width: 1.25em;
+  height: 1.25em;
+  flex: none;
+}
+
+.home {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space);
+}
+
+.links ul {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0 1.5rem;
+}
+
+.links .icon {
+  color: var(--color-icon);
+}
+
+.links li a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-block: 0.375rem;
+}
+
+.painting {
+  margin: 0;
+}
+
+@media (min-width: 768px) {
+  .home {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+
+  .painting {
+    flex: 0 1 746px;
+  }
+}
+
+/* Anascramble page: one centred column (scramble area, solution row, letters field, button). */
+.anascramble {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space);
+  width: 100%;
+  max-width: 400px;
+  margin-inline: auto;
+  container-type: inline-size;
+}
+
+/* The scramble area is SVG so letters are positioned by attributes, not inline styles (CSP).
+   It scales to the available width; the server sizes the view box to fit every letter. */
+.scramble {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+}
+
+.scramble-letter {
+  font-family: "Rock Salt", cursive;
+  font-size: 32px;
+  fill: var(--color-link);
+}
+
+/* Letters used by the solution are faded and marked inactive (aria-disabled), so they are exempt
+   from the contrast requirement (spec FR-012). */
+.scramble-letter.dimmed {
+  opacity: 0.25;
+}
+
+.letters-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  width: 100%;
+}
+
+.anascramble input[type="text"] {
+  min-height: var(--menu-button-size);
+  padding: 0.5rem 0.75rem;
+  border: 2px solid var(--color-text);
+  border-radius: 0.25rem;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font: inherit;
+}
+
+.primary-button {
+  min-width: var(--menu-button-size);
+  min-height: var(--menu-button-size);
+  padding: 0.5rem 1.5rem;
+  border: 0;
+  border-radius: 0.25rem;
+  background: var(--color-nav-current-bg);
+  color: var(--color-nav-current-text);
+  font: inherit;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.primary-button[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Solution field: one text input laid over a row of cells (one per letter). The browser's own
+   editing gives advance, Backspace and Space (a blank). In a monospace font every character is
+   1ch wide, so letter-spacing of (cell - 1ch) and half that as start padding centre each
+   character in its cell. The cells set the width (the input has zero intrinsic width and
+   stretches to fill), and the end padding on the cells absorbs the spacing after the last
+   character so a full field never scrolls. */
+.solution-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  max-width: 100%;
+}
+
+.solution-row[hidden] {
+  display: none;
+}
+
+.solution-field {
+  --cell-width: 2ch;
+  --cell-pad: calc((var(--cell-width) - 1ch) / 2);
+  display: grid;
+  max-width: 100%;
+  overflow-x: auto;
+  font-family: ui-monospace, "Cascadia Mono", "Segoe UI Mono", "DejaVu Sans Mono", monospace;
+  /* Shrink the cells so the row fits the column: about 1.2em per cell. */
+  font-size: min(1.5rem, 100cqi / 12.5);
+}
+
+.solution-field:has(.solution-cells > :nth-child(11)) {
+  font-size: min(1.5rem, 100cqi / 24.5);
+}
+
+.solution-field:has(.solution-cells > :nth-child(21)) {
+  /* Below this floor letters get too small to read; the row scrolls within itself instead. */
+  font-size: max(0.875rem, min(1.5rem, 100cqi / 36.5));
+}
+
+.solution-cells,
+.anascramble .solution-field input {
+  grid-area: 1 / 1;
+}
+
+.solution-cells {
+  display: flex;
+  padding-inline-end: calc(var(--cell-pad) + 2px);
+}
+
+.solution-cells span {
+  flex: none;
+  width: var(--cell-width);
+  height: 2.2em;
+  /* An underline per cell, inset so neighbouring cells stay visibly separate. */
+  background: linear-gradient(var(--color-text), var(--color-text)) center bottom /
+    calc(100% - 0.4ch) 3px no-repeat;
+}
+
+.anascramble .solution-field input {
+  width: 0;
+  min-width: 100%;
+  min-height: 0;
+  margin: 0;
+  padding: 0 0 0 var(--cell-pad);
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  font: inherit;
+  letter-spacing: calc(var(--cell-width) - 1ch);
+  text-transform: uppercase;
+}
+
+.anascramble .solution-field input:focus-visible {
+  outline-offset: 4px;
+}

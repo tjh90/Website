@@ -1,0 +1,87 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10.3.3
+        with:
+          enable-cache: true
+      - name: Lockfile is up to date
+        run: uv lock --check
+      - name: Formatting
+        run: uv run ruff format --check
+      - name: Linting
+        run: uv run ruff check --output-format=github
+      - name: Type checking
+        run: uv run ty check
+
+  test:
+    runs-on: self-hosted
+    permissions:
+      contents: read
+      checks: write
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10.3.3
+        with:
+          enable-cache: true
+      - name: Install dependencies
+        run: uv sync --locked
+      - name: Install Playwright browsers
+        run: uv run playwright install --with-deps chromium firefox
+      - name: Run tests
+        run: uv run pytest --junitxml=reports/junit.xml
+      - name: Run Firefox tests
+        run: uv run pytest -m firefox --browser firefox --junitxml=reports/junit-firefox.xml
+      - name: Report test results
+        uses: dorny/test-reporter@v3
+        if: ${{ !cancelled() }}
+        with:
+          name: pytest results
+          path: reports/junit*.xml
+          reporter: java-junit
+
+  test-external-links:
+    runs-on: self-hosted
+    # Third-party outages must not block PRs; failures are still reported.
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10.3.3
+        with:
+          enable-cache: true
+      - name: Install dependencies
+        run: uv sync --locked
+      - name: Check external links
+        run: uv run pytest -m external
+
+  docker:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v7
+      - uses: docker/setup-buildx-action@v4
+      - name: Build image
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: build/Dockerfile
+          target: website-run
+          push: false
+          build-args: WEBSITE_REVISION=${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

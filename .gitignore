@@ -1,25 +1,15 @@
-# Development and build directories to ignore.
-.settings/
-.vscode/
-bin/
-node_modules/
-target/
-
-# HTTPS certification files.
-certs/
-*.pem
-
-# JavaScript and TypeScript files.
-*.js
-*.ts
-*.tsx
-
-# Other files.
-.classpath
+# Environment
 .env
-.project
-index.html
-layouts.json
-package.json
-package-lock.json
-tsconfig.json
+build/.env
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+dist/
+
+# Tool caches and reports
+.pytest_cache/
+.ruff_cache/
+reports/
+test-results/

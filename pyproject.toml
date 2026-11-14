@@ -1,0 +1,59 @@
+[project]
+name = "website"
+version = "0.1.0"
+description = "Personal website server."
+readme = "README.md"
+license = "AGPL-3.0-only"
+license-files = ["LICENSE"]
+authors = [{ name = "tjh90" }]
+requires-python = ">=3.15"
+dependencies = [
+    "fastapi>=0.162.5",
+    "jinja2>=3.1.6",
+    "pydantic-settings>=2.16.2",
+    "python-multipart>=0.0.33",
+    "uvicorn[standard]>=0.54.0",
+]
+
+[project.scripts]
+website = "website.__main__:main"
+
+[build-system]
+requires = ["uv_build>=0.13.8,<0.14.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "axe-playwright-python>=0.1.8",
+    "httpx2>=2.16.0",
+    "pytest>=9.2.0",
+    "pytest-playwright>=0.10.0",
+    "ruff>=0.17.5",
+    "ty>=0.0.102",
+]
+
+[tool.ruff]
+target-version = "py315"
+line-length = 100
+extend-exclude = [".specify"]
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "N", "D", "UP", "B", "SIM", "ANN", "RUF", "S", "PT", "PTH"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.per-file-ignores]
+# Tests assert with `assert` and use seeded `random` deliberately for reproducible layouts.
+"tests/**" = ["S101", "S311"]
+
+[tool.ty.src]
+include = ["src", "tests"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--strict-markers -m 'not external' --browser chromium"
+markers = [
+    "external: hits real third-party URLs; run with -m external",
+    "firefox: browser test that must also pass in Firefox; run with -m firefox --browser firefox",
+]
