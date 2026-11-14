@@ -3,7 +3,7 @@
 from pathlib import Path
 from typing import Annotated, Final, Literal
 
-from fastapi import APIRouter, Form, Request
+from fastapi import APIRouter, Form, HTTPException, Query, Request
 from fastapi.responses import FileResponse, HTMLResponse
 from pydantic import BaseModel
 
@@ -16,6 +16,7 @@ from website.content import (
     LICENCE_URL,
     PAINTING_ALT,
 )
+from website.cookbook import RecipeCollection, RecipeQuery, filter_recipes
 from website.templating import is_htmx_request, render
 
 _FAVICON: Final = Path(__file__).parent / "static" / "favicon.ico"
@@ -154,6 +155,70 @@ def anascramble_submit(request: Request, form: Annotated[AnascrambleForm, Form()
     response = render(request, template, {"puzzle": puzzle, "intent": intent})
     response.headers["Cache-Control"] = "no-store"
     return response
+
+
+def get_collection(request: Request) -> RecipeCollection:
+    """Return the recipe collection loaded at start-up.
+
+    Args:
+        request: The current request.
+
+    Returns:
+        The application's recipe collection.
+    """
+    collection: RecipeCollection = request.app.state.recipes
+    return collection
+
+
+@router.api_route(
+    "/recipes",
+    methods=["GET", "HEAD"],
+    name="recipes",
+    response_class=HTMLResponse,
+    include_in_schema=False,
+)
+def recipes(request: Request, query: Annotated[RecipeQuery, Query()]) -> HTMLResponse:
+    """Render the recipe list, filtered by the query string.
+
+    The full page is returned for every request; the filter form's htmx request picks out the
+    results (contracts/http.md).
+
+    Args:
+        request: The current request.
+        query: The filters; odd values are ignored rather than rejected.
+
+    Returns:
+        The rendered page.
+    """
+    collection = get_collection(request)
+    search = filter_recipes(collection, query)
+    return render(request, "recipes.html", {"collection": collection, "search": search})
+
+
+@router.api_route(
+    "/recipes/{slug}",
+    methods=["GET", "HEAD"],
+    name="recipe",
+    response_class=HTMLResponse,
+    include_in_schema=False,
+)
+def recipe(request: Request, slug: str) -> HTMLResponse:
+    """Render one recipe.
+
+    Args:
+        request: The current request.
+        slug: The recipe's file name without ``.md``.
+
+    Returns:
+        The rendered page.
+
+    Raises:
+        HTTPException: 404 if there is no such recipe.
+    """
+    found = get_collection(request).by_slug.get(slug)
+    if found is None:
+        raise HTTPException(status_code=404)
+    return render(request, "recipe.html", {"recipe": found})
 
 
 @router.get("/favicon.ico", include_in_schema=False)

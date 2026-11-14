@@ -59,8 +59,8 @@ Start the site (`uv run website`) and open `/recipes`.
 | 8 | Press "Clear filters" | All recipes, empty controls |
 | 9 | Disable JavaScript, filter and press "Filter" (now visible) | Same results by normal form submission |
 | 10 | Switch theme; narrow the window to 320 px | Readable in both themes; no sideways page scroll; filters collapsed behind "Filters"; recipe page stacks ingredients above method |
-| 12 | At phone width, open "Filters" and tick "Drink" | Toggle reads "Filters · 1 active"; list updates without a reload |
-| 13 | Visit `/recipes/nope` | Site's "Page not found" page |
+| 11 | At phone width, open "Filters" and tick "Drink" | Toggle reads "Filters · 1 active"; list updates without a reload |
+| 12 | Visit `/recipes/nope` | Site's "Page not found" page |
 
 ## Enforcement walkthrough
 
@@ -68,7 +68,7 @@ Start the site (`uv run website`) and open `/recipes`.
 |---|---|---|
 | 1 | Change `- Lime` to `- Limes` in `french-75.md` and run the check | Fails: `french-75.md: unknown ingredient "Limes"` |
 | 2 | Start the site with that change | It refuses to start and prints the same report |
-| 3 | Rename `## Method` to `## Methd` | Check reports `unknown section "Methd"` and `missing section "Method"` |
+| 3 | Rename `## Method` to `## Methd` | Check reports `unknown section "Methd"` (only the typo, not a missing "Method") |
 | 4 | Add `Gin (50 ml` | Check reports unbalanced parentheses |
 | 5 | Revert all changes | Check passes and the site starts |
 

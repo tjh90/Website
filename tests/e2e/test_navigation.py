@@ -3,10 +3,10 @@
 import pytest
 from playwright.sync_api import Browser, Locator, Page, expect
 
-from website.content import ABOUT, ANASCRAMBLE, HOME, NOT_FOUND_TITLE, PAGES
+from website.content import ABOUT, ANASCRAMBLE, HOME, NOT_FOUND_TITLE, PAGES, RECIPES
 from website.content import Page as SitePage
 
-_TESTED_PAGES = (HOME, ANASCRAMBLE, ABOUT)
+_TESTED_PAGES = (HOME, ANASCRAMBLE, RECIPES, ABOUT)
 _PAGE_PARAMS = [pytest.param(p, id=p.name) for p in _TESTED_PAGES]
 
 

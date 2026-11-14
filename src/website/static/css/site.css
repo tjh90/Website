@@ -24,6 +24,10 @@
   --color-nav-current-bg: light-dark(#1a4fbf, #c0e0ff);
   --color-nav-current-text: light-dark(#fff, #121417);
   --color-nav-hover-bg: light-dark(#dbe6ff, #1f2a44);
+  --color-muted: light-dark(#5c5c5c, #a6a6a6);
+  --color-border: light-dark(#d0d4dc, #2c3038);
+  --color-pill-bg: light-dark(#dbe6ff, #1f2a44);
+  --color-pill-text: light-dark(#1a3f99, #c0e0ff);
   --menu-button-size: 44px;
   --space: 1rem;
   --header-height: 3.75rem;
@@ -574,4 +578,347 @@ main:has(> .anascramble) {
 
 .anascramble .solution-field input:focus-visible {
   outline-offset: 4px;
+}
+
+/* Recipes list page: filters beside the results on wide screens, above them on narrow ones. */
+.recipes-layout {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 2rem;
+  max-width: 1100px;
+  margin-inline: auto;
+}
+
+.recipes-layout section,
+.recipe section {
+  padding-inline: 0;
+}
+
+/* Collapsible filters panel (native <details>, no JavaScript). */
+.recipe-filters-panel {
+  flex: 1 1 100%;
+  min-width: 0;
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+}
+
+.recipe-filters-panel > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space);
+  min-height: 48px;
+  padding: 0 var(--space);
+  font-weight: bold;
+  list-style: none;
+  cursor: pointer;
+}
+
+.recipe-filters-panel > summary::-webkit-details-marker {
+  display: none;
+}
+
+.filter-count {
+  font-weight: normal;
+  color: var(--color-muted);
+}
+
+.recipe-filters-panel[open] .chevron {
+  rotate: 180deg;
+}
+
+.recipe-filters {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 0.25rem var(--space) var(--space);
+}
+
+.recipe-filters fieldset {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.25rem 0.75rem;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.recipe-filters legend {
+  padding: 0;
+  margin-block-end: 0.5rem;
+  font-weight: bold;
+}
+
+.type-option {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  min-height: 36px;
+  cursor: pointer;
+}
+
+.type-option input {
+  width: 1.25rem;
+  height: 1.25rem;
+  margin: 0;
+  accent-color: var(--color-link);
+}
+
+.filter-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.filter-field label {
+  font-weight: bold;
+}
+
+.recipe-filters input[type="search"] {
+  width: 100%;
+  min-height: var(--menu-button-size);
+  padding: 0.5rem 0.75rem;
+  border: 2px solid var(--color-text);
+  border-radius: 0.25rem;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font: inherit;
+}
+
+/* Live filtering makes the button redundant; it is only needed without JavaScript. */
+@media (scripting: enabled) {
+  .filter-submit {
+    display: none;
+  }
+}
+
+@media (min-width: 768px) {
+  .recipe-filters-panel {
+    flex: 1 1 240px;
+    max-width: 300px;
+  }
+
+  /* Always open on wide screens: no toggle, content forced visible. */
+  .recipe-filters-panel > summary {
+    display: none;
+  }
+
+  .recipe-filters-panel::details-content {
+    content-visibility: visible;
+    display: contents;
+  }
+
+  .recipe-filters {
+    padding: 1.25rem;
+  }
+
+  .recipe-filters fieldset {
+    grid-template-columns: 1fr;
+  }
+}
+
+.recipe-results {
+  flex: 999 1 320px;
+  min-width: 0;
+}
+
+.results-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-block-end: 0.5rem;
+  border-bottom: 2px solid var(--color-text);
+}
+
+.results-header p {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: bold;
+}
+
+.clear-filters {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--menu-button-size);
+}
+
+.no-results-tip {
+  color: var(--color-muted);
+}
+
+.recipe-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.recipe-list li {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 1rem 0.25rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.recipe-list-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+}
+
+.recipe-list-row a {
+  font-size: 1.1875rem;
+  font-weight: 600;
+}
+
+.recipe-type {
+  margin: 0;
+  padding: 0.125rem 0.75rem;
+  border-radius: 999px;
+  background: var(--color-pill-bg);
+  color: var(--color-pill-text);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+/* One line; long summaries are cut off with an ellipsis. */
+.recipe-summary {
+  margin: 0;
+  overflow: hidden;
+  color: var(--color-muted);
+  font-size: 0.9375rem;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* Recipe page: the ingredients card beside the method on wide screens, stacked on narrow ones. */
+.recipe {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 1000px;
+  margin-inline: auto;
+}
+
+.recipe-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  min-height: var(--menu-button-size);
+}
+
+.recipe-body {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 2.5rem;
+}
+
+.recipe-body h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.375rem;
+}
+
+.recipe .recipe-ingredients {
+  flex: 1 1 280px;
+  max-width: 360px;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+}
+
+.recipe-method {
+  flex: 999 1 420px;
+  min-width: 0;
+}
+
+.ingredients {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* One row per ingredient: a long name wraps within its own column, so the amount stays on the
+   right. */
+.ingredients li {
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem 0.625rem;
+  padding: 0.625rem 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.ingredients li:last-child {
+  border-bottom: 0;
+}
+
+.ingredient-name {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-weight: 600;
+}
+
+.ingredient-optional,
+.ingredient-amount {
+  flex: none;
+  white-space: nowrap;
+}
+
+.ingredient-optional {
+  padding: 0 0.5rem;
+  border: 1px solid var(--color-muted);
+  border-radius: 999px;
+  color: var(--color-muted);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.ingredient-amount {
+  color: var(--color-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Numbered steps in circles. The <ol> keeps its list semantics; the number is drawn from the
+   built-in list-item counter (so an <ol start> is honoured) and hidden from assistive technology,
+   which already announces the position in the list. */
+.method ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.method ol > li {
+  position: relative;
+  min-height: 3.5rem;
+  padding: 0.75rem 0 0.75rem 3.25rem;
+}
+
+.method ol > li::before {
+  content: counter(list-item);
+  content: counter(list-item) / "";
+  position: absolute;
+  top: 0.5rem;
+  left: 0;
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: var(--color-nav-current-bg);
+  color: var(--color-nav-current-text);
+  font-weight: bold;
 }

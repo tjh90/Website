@@ -3,13 +3,15 @@
 import logging
 import re
 from functools import lru_cache
+from pathlib import Path
 from typing import Final
 
-from pydantic import HttpUrl, field_validator
+from pydantic import DirectoryPath, HttpUrl, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 _LOGGER: Final = logging.getLogger(__name__)
 _REVISION_PATTERN: Final = re.compile(r"^[0-9a-f]{7,40}$")
+_RECIPES_DIR: Final = Path(__file__).parent / "recipes"
 
 
 class Settings(BaseSettings):
@@ -18,12 +20,15 @@ class Settings(BaseSettings):
     Attributes:
         revision: Git revision the running site was built from, or ``None`` if unknown.
         repository_url: Public source repository of the site.
+        recipes_dir: Folder holding the recipe collection (``WEBSITE_RECIPES_DIR``); defaults to
+            the recipes shipped with the package.
     """
 
     model_config = SettingsConfigDict(env_prefix="WEBSITE_")
 
     revision: str | None = None
     repository_url: HttpUrl = HttpUrl("https://github.com/tjh90/website")
+    recipes_dir: DirectoryPath = _RECIPES_DIR
 
     @field_validator("revision", mode="before")
     @classmethod

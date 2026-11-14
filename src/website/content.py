@@ -38,10 +38,11 @@ HOME: Final = Page(name="home", path="/", title=SITE_TITLE, nav_label="Home")
 ANASCRAMBLE: Final = Page(
     name="anascramble", path="/anascramble", title="Anascramble", nav_label="Anascramble"
 )
+RECIPES: Final = Page(name="recipes", path="/recipes", title="Recipes", nav_label="Recipes")
 ABOUT: Final = Page(name="about", path="/about", title="About", nav_label="About")
 # Navigation order. The last page (About) is pinned to the bottom of the drawer, so add new
 # pages before it.
-PAGES: Final[tuple[Page, ...]] = (HOME, ANASCRAMBLE, ABOUT)
+PAGES: Final[tuple[Page, ...]] = (HOME, ANASCRAMBLE, RECIPES, ABOUT)
 
 
 def tab_title(title: str) -> str:

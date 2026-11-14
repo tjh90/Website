@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% set page_title = recipe.name %}
+{% set current_page = "recipes" %}
+{% block content %}
+<article class="recipe">
+  <div class="recipe-top">
+    <a href="/recipes" class="back-link"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>All recipes</a>
+    <p class="recipe-type">{{ recipe.type.name }}</p>
+  </div>
+  <div class="recipe-body">
+    <section class="recipe-ingredients" aria-labelledby="ingredients-heading">
+      <h2 id="ingredients-heading">Ingredients</h2>
+      <ul class="ingredients">
+        {% for entry in recipe.ingredients %}
+        <li>
+          <span class="ingredient-name">{{ entry.display_name }}</span>
+          {% if entry.optional %}<span class="ingredient-optional">optional</span>{% endif %}
+          {% if entry.amount %}<span class="ingredient-amount">{{ entry.amount }}</span>{% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+    </section>
+    <section class="recipe-method" aria-labelledby="method-heading">
+      <h2 id="method-heading">Method</h2>
+      {#- The only "safe" output on the site: method_html comes from markdown-it with raw HTML and
+          images disabled and unsafe link schemes refused (cookbook.py). -#}
+      <div class="method">{{ recipe.method_html | safe }}</div>
+    </section>
+  </div>
+</article>
+{% endblock %}

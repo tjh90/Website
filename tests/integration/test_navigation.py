@@ -22,6 +22,12 @@ def test_layout_has_drawer(client: TestClient, page: Page) -> None:
     assert current == [page.path]
 
 
+def test_recipe_page_marks_recipes_as_current(client: TestClient) -> None:
+    """A recipe page highlights the Recipes link in the drawer."""
+    html = client.get("/recipes/french-75").text
+    assert re.findall(r'<a href="([^"]+)" aria-current="page"', html) == ["/recipes"]
+
+
 def test_not_found_page(client: TestClient) -> None:
     """Unknown paths return a 404 page that keeps the layout."""
     response = client.get("/does-not-exist")

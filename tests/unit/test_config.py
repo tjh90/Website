@@ -1,9 +1,11 @@
 """Unit tests for :mod:`website.config`."""
 
 import logging
+from pathlib import Path
 
 import pytest
 
+import website
 from website.config import Settings
 
 _FULL_SHA = "0123456789abcdef0123456789abcdef01234567"
@@ -14,6 +16,7 @@ def _clear_env(monkeypatch: pytest.MonkeyPatch) -> None:
     """Ensure ambient environment variables do not leak into settings."""
     monkeypatch.delenv("WEBSITE_REVISION", raising=False)
     monkeypatch.delenv("WEBSITE_REPOSITORY_URL", raising=False)
+    monkeypatch.delenv("WEBSITE_RECIPES_DIR", raising=False)
 
 
 def test_revision_defaults_to_none() -> None:
@@ -59,3 +62,14 @@ def test_environment_variables_are_honoured(monkeypatch: pytest.MonkeyPatch) -> 
     settings = Settings()
     assert settings.revision == "abcdef1"
     assert str(settings.repository_url).rstrip("/") == "https://example.com/repo"
+
+
+def test_recipes_dir_defaults_to_packaged_recipes() -> None:
+    """The recipe collection defaults to the folder shipped with the package."""
+    assert Settings().recipes_dir == Path(website.__file__).parent / "recipes"
+
+
+def test_recipes_dir_can_be_overridden(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    """``WEBSITE_RECIPES_DIR`` points the site at another recipe folder."""
+    monkeypatch.setenv("WEBSITE_RECIPES_DIR", str(tmp_path))
+    assert Settings().recipes_dir == tmp_path
