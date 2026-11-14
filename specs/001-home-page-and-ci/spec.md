@@ -1,6 +1,6 @@
 # Feature Specification: Home Page, Navigation, About Page and CI
 
-**Feature Branch**: `rewrite` (spec-kit feature id `001-home-page-and-ci`)
+**Feature Branch**: `main` (spec-kit feature id `001-home-page-and-ci`)
 
 **Created**: 2026-11-12
 
@@ -13,7 +13,12 @@ with AGPL. Also include CI configs etc."
 
 ## Reference Implementation
 
-The existing site on the `main` branch is the behavioural reference for this feature. Relevant
+> **Note**: The previous site was a Java/Vaadin implementation. It has since been removed from
+> this repository's history, so it can no longer be checked out. In the quoted input above,
+> "main" means that previous site. The behaviour summarised below is the complete record of the
+> reference.
+
+The previous implementation is the behavioural reference for this feature. Relevant
 behaviour carried forward:
 
 - **Home page** (`/`): page title "Tim's Page"; a "Links:" heading followed by three external links,
@@ -23,10 +28,10 @@ behaviour carried forward:
   - "Paper" (document icon) → `https://ieeexplore.ieee.org/document/7029130`
   - Alongside the links, the image "Sisley - Lady's Cove (1897)" (with that alt text).
 - **Site chrome**: a coloured header bar showing the current page's title, and navigation
-  (a collapsible drawer on `main`) listing the site's pages, closing after a page is chosen.
+  (a collapsible drawer in the previous implementation) listing the site's pages, closing after a page is chosen.
   A dark-mode toggle sits in the navigation.
 - **Privacy page** (`/privacy`): describes the cookies the site uses.
-- **Tests on `main`** covering the above: link text/targets, links resolve, links open in a new
+- **Tests in the previous implementation** covering the above: link text/targets, links resolve, links open in a new
   tab, every page loads, navigation reaches each page, header title matches the page, navigation
   works on a mobile viewport, and dark-mode toggling.
 

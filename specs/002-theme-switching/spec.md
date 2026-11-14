@@ -1,6 +1,6 @@
 # Feature Specification: Light and Dark Theme Switching
 
-**Feature Branch**: `rewrite` (spec-kit feature id `002-theme-switching`)
+**Feature Branch**: `main` (spec-kit feature id `002-theme-switching`)
 
 **Created**: 2026-11-14
 
@@ -12,7 +12,12 @@ should come from the user's settings (browser/machine? Whatever is possible)."
 
 ## Reference Implementation
 
-The site on the `main` branch is the behavioural reference. Relevant behaviour:
+> **Note**: The previous site was a Java/Vaadin implementation. It has since been removed from
+> this repository's history, so it can no longer be checked out. In the quoted input above,
+> "main" means that previous site. The behaviour summarised below is the complete record of the
+> reference.
+
+The previous implementation is the behavioural reference. Relevant behaviour:
 
 - A "Dark mode" item with a checkbox sits in the navigation drawer, below the page links.
   Activating either the item or its checkbox toggles between the light and dark themes.

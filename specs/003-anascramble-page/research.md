@@ -1,7 +1,8 @@
 # Research: Anascramble Page
 
-All Technical Context unknowns are resolved below. Sources: main branch Java implementation
-(`CharacterScrambler`, `AnascrambleViewModel`), the vendored htmx 4.0.1 file (inspected directly),
+All Technical Context unknowns are resolved below. Sources: the previous Java/Vaadin implementation
+(`CharacterScrambler`, `AnascrambleViewModel`; since removed from this repository's history, so the
+relevant details are recorded here), the vendored htmx 4.0.1 file (inspected directly),
 the npm registry and the site's existing CSP (`src/website/app.py`).
 
 ## R1. Solution-row keyboard behaviour under the CSP
@@ -27,11 +28,11 @@ the npm registry and the site's existing CSP (`src/website/app.py`).
 - **Decision**: Render the scramble area as inline SVG. Each character is a `<text>` element with
   `x`/`y` attributes. The `viewBox` is computed by the server to enclose every character plus a
   margin, never smaller than 320 × 320 units and always square and centred on the origin. The SVG is
-  `aspect-ratio: 1`, at most 320 px wide, so letters keep their natural size. (Main's 400-unit
+  `aspect-ratio: 1`, at most 320 px wide, so letters keep their natural size. (The previous implementation's 400-unit
   area left blank space round typical words, pushing the controls towards the bottom of short
   screens; letters of up to 15-letter words stay within 160 units of the centre.)
 - **Rationale**:
-  - The CSP is `style-src 'self'`, which blocks `style=""` attributes. Main positioned letters with
+  - The CSP is `style-src 'self'`, which blocks `style=""` attributes. The previous implementation positioned letters with
     inline `left`/`top` styles, which would be blocked here. SVG geometry attributes are not styles.
   - Fitting the `viewBox` to the letters guarantees FR-006 (all inside the area) for any length: long
     inputs just scale down. No rejection-sampling failure mode exists.
@@ -44,17 +45,17 @@ the npm registry and the site's existing CSP (`src/website/app.py`).
 
 ## R3. Scrambling algorithm
 
-- **Decision**: Port main's algorithm to a pure Python module: for each character, pick a random
+- **Decision**: Port the previous implementation's algorithm to a pure Python module: for each character, pick a random
   angle at the current radius; if the point is within the minimum distance of an earlier one, retry,
   growing the radius by a fixed step every 10 tries. Positions are relative to the origin. Then the
-  `viewBox` is fitted (R2). Constants: start radius 50, step 5, as on main.
-- **Spacing (changed during implementation)**: main kept centres 50 units apart (a circle). Measured
+  `viewBox` is fitted (R2). Constants: start radius 50, step 5, as in the previous implementation.
+- **Spacing (changed during implementation)**: The previous implementation kept centres 50 units apart (a circle). Measured
   with canvas text metrics, Rock Salt capitals at 32 units have ink boxes up to 49 × 49 units, and
   that spacing let ink overlap in 55% of 1,000 random layouts. A square clearance (Chebyshev
   distance) of 58 units gave no overlaps in 1,000 layouts, with a 40-unit view-box margin keeping
   all ink inside. Long inputs therefore spread slightly further (view box up to about 540 units for
   30 letters) and scale down a little more.
-- **Rationale**: Same visual result as main (letters cluster round the centre, spreading for longer
+- **Rationale**: Same visual result as the previous implementation (letters cluster round the centre, spreading for longer
   inputs). Termination is guaranteed because the radius keeps growing.
 - **Randomness**: functions take a `random.Random` instance (constitution IV: injectable seeds). The
   route creates `random.Random(seed)`. The seed is a 63-bit value from `secrets.randbits`. `random`
@@ -125,8 +126,8 @@ the npm registry and the site's existing CSP (`src/website/app.py`).
   `autocomplete="off"`, `autocapitalize="characters"`, `spellcheck="false"`, so native validation
   covers no-JS submission. The solution field gets the same `autocomplete`, `autocapitalize` and
   `spellcheck` attributes, with `pattern="[A-Za-z ]*"`.
-- **Rationale**: HTML cannot block typing a character, which is what main's Vaadin
-  `allowedCharPattern` did with JS. Server correction keeps the observable behaviour (the character
+- **Rationale**: HTML cannot block typing a character, which is what the previous implementation's
+  Vaadin `allowedCharPattern` did with JS. Server correction keeps the observable behaviour (the character
   disappears) within SC-002's 0.5 s.
 - **"Scramble!" enabled state**: rendered disabled when fewer than 3 valid letters; updated by the
   button fragment on every letters `input`. Without JS, the button is enabled and native
@@ -149,13 +150,13 @@ the npm registry and the site's existing CSP (`src/website/app.py`).
 
 ## R8. Handwritten font
 
-- **Decision**: Rock Salt (as on main), self-hosted from `@fontsource/rock-salt` 5.3.0
+- **Decision**: Rock Salt (as in the previous implementation), self-hosted from `@fontsource/rock-salt` 5.3.0
   (`files/rock-salt-latin-400-normal.woff2`), served from `static/fonts/` with an `@font-face` rule
   using `font-display: swap`. The package's `LICENSE` (Apache-2.0) is kept next to the font file.
 - **Licence**: Apache-2.0, compatible with AGPL-3.0 (via GPLv3 compatibility). It does not require
   visible attribution, but a courtesy credit is added to `CREDITS` (Rock Salt, Sideshow, Apache
   License 2.0), consistent with the htmx credit.
-- **Rationale**: Constitution V requires self-hosted assets; main used the Google Fonts CDN. Latin
+- **Rationale**: Constitution V requires self-hosted assets; the previous implementation used the Google Fonts CDN. Latin
   subset only: input is A–Z.
 - **Alternatives considered**: Google Fonts CDN (constitution V, privacy); a system cursive font
   (inconsistent look across platforms).

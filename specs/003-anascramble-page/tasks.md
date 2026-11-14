@@ -97,7 +97,7 @@ each time; the button is disabled below 3 letters and digits are removed.
 - [X] T014 [US1] In `src/website/anascramble.py`, implement:
   - `sanitise_letters(raw: str) -> str` (truncate to `MAX_FIELD_LENGTH`, upper-case, keep only `A`–`Z`, truncate to `MAX_LETTERS`).
   - Frozen, slotted dataclass `PlacedLetter(index: int, letter: str, x: float, y: float)`.
-  - `scramble(letters: str, rng: random.Random) -> list[PlacedLetter]`, porting main's `CharacterScrambler`: for each letter in order, start at radius `START_RADIUS`, pick `theta = math.tau * rng.random()`, point `(r*sin θ, r*cos θ)`; while it is closer than `MIN_SPACING` to any earlier point, pick a new angle and every `TRIES_PER_STEP` tries add `RADIUS_STEP` to the radius. The radius carries over between letters (as on main). Round coordinates to 1 decimal place. Then `rng.shuffle` the list.
+  - `scramble(letters: str, rng: random.Random) -> list[PlacedLetter]`, porting the previous implementation's `CharacterScrambler` (algorithm recorded in research R3): for each letter in order, start at radius `START_RADIUS`, pick `theta = math.tau * rng.random()`, point `(r*sin θ, r*cos θ)`; while it is closer than `MIN_SPACING` to any earlier point, pick a new angle and every `TRIES_PER_STEP` tries add `RADIUS_STEP` to the radius. The radius carries over between letters (as in the previous implementation). Round coordinates to 1 decimal place. Then `rng.shuffle` the list.
   - `view_box(placed: Sequence[PlacedLetter]) -> tuple[float, float, float, float]` per [data-model.md](data-model.md#viewbox-domain).
   - `new_seed() -> int` returning `secrets.randbits(63)`.
   - `parse_seed(raw: str) -> int | None` (integer in `[0, 2**63)`, else `None`).

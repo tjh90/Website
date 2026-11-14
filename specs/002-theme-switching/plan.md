@@ -1,6 +1,6 @@
 # Implementation Plan: Light and Dark Theme Switching
 
-**Branch**: `rewrite` (spec-kit feature id `002-theme-switching`) | **Date**: 2026-11-14 |
+**Branch**: `main` (spec-kit feature id `002-theme-switching`) | **Date**: 2026-11-14 |
 **Spec**: [spec.md](spec.md)
 
 **Input**: Feature specification from `specs/002-theme-switching/spec.md`

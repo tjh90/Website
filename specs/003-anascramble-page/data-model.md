@@ -10,11 +10,11 @@ model, which lives in `website.routes`.
 | `MIN_LETTERS` | 3 | FR-004 |
 | `MAX_LETTERS` | 30 | FR-004 |
 | `BLANK` | `" "` | FR-011 (unknown letter in the solution) |
-| `START_RADIUS` | 50.0 | Main's `DEFAULT_INITIAL_OFFSET` |
-| `RADIUS_STEP` | 5.0 | Main's `DEFAULT_OFFSET_INCR` |
-| `TRIES_PER_STEP` | 10 | Main (`tries % 10`) |
-| `MIN_SPACING` | 58.0 | Square clearance; main's circular 50 let Rock Salt ink overlap (research R3) |
-| `MIN_VIEW_SIZE` | 320.0 | Fits up to about 15 letters without blank space round them (R2); main used 400 |
+| `START_RADIUS` | 50.0 | Previous implementation's `DEFAULT_INITIAL_OFFSET` |
+| `RADIUS_STEP` | 5.0 | Previous implementation's `DEFAULT_OFFSET_INCR` |
+| `TRIES_PER_STEP` | 10 | Previous implementation (`tries % 10`) |
+| `MIN_SPACING` | 58.0 | Square clearance; the previous implementation's circular 50 let Rock Salt ink overlap (research R3) |
+| `MIN_VIEW_SIZE` | 320.0 | Fits up to about 15 letters without blank space round them (R2); the previous implementation used 400 |
 | `VIEW_MARGIN` | 40.0 | Keeps glyph ink (up to 49 units, off-centre) fully inside the box |
 
 ## AnascrambleForm (Pydantic, request body)
@@ -72,7 +72,7 @@ clears the solution even if the old solution would still be valid.
 | `letter` | `str` | One upper-case letter |
 | `x`, `y` | `float` | Centre, relative to the origin (0, 0) |
 
-`scramble(letters, rng) -> list[PlacedLetter]` places letters in typed order (main's algorithm),
+`scramble(letters, rng) -> list[PlacedLetter]` places letters in typed order (the previous implementation's algorithm),
 then shuffles the list with the same `rng` (FR-019 reading order). For a given seed the result is
 identical every time (FR-008).
 
@@ -88,6 +88,6 @@ Every letter is therefore inside the box (FR-006).
 ## claimed_map
 
 `claimed_map(letters, solution) -> list[bool]`, parallel to `letters`. For each non-blank letter in
-`solution`, in order, mark the first unclaimed matching index. Same rule as main's
+`solution`, in order, mark the first unclaimed matching index. Same rule as the previous implementation's
 `computeClaimedMap`. `sanitise_solution` uses the same walk: a letter with no unclaimed match is
 refused (removed).

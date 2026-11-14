@@ -1,6 +1,6 @@
 # Implementation Plan: Home Page, Navigation, About Page and CI
 
-**Branch**: `rewrite` (feature id `001-home-page-and-ci`) | **Date**: 2026-11-12 |
+**Branch**: `main` (feature id `001-home-page-and-ci`) | **Date**: 2026-11-12 |
 **Spec**: [spec.md](spec.md)
 
 **Input**: Feature specification from `specs/001-home-page-and-ci/spec.md`

@@ -1,19 +1,19 @@
 # Implementation Plan: Anascramble Page
 
-**Branch**: `rewrite` (spec-kit feature id `003-anascramble-page`) | **Date**: 2026-11-14 |
+**Branch**: `main` (spec-kit feature id `003-anascramble-page`) | **Date**: 2026-11-14 |
 **Spec**: [spec.md](spec.md)
 
 **Input**: Feature specification from `specs/003-anascramble-page/spec.md`
 
 ## Summary
 
-Add the Anascramble page from `main`: visitors type 3–30 letters, press "Scramble!" to see them
+Add the Anascramble page from the previous (Java/Vaadin) implementation: visitors type 3–30 letters, press "Scramble!" to see them
 jumbled round a centre point, and type a candidate answer into a solution field that dims the
-letters it uses. Same behaviour as main, rebuilt server-side with no hand-written JavaScript.
+letters it uses. Same behaviour as before, rebuilt server-side with no hand-written JavaScript.
 
 Technical approach (details in [research.md](research.md)):
 
-- **Domain**: a pure `website.anascramble` module ports main's scrambling algorithm (random angle,
+- **Domain**: a pure `website.anascramble` module ports the previous implementation's scrambling algorithm (random angle,
   growing radius, minimum spacing) and the letter-availability rules. All randomness comes from an
   injected `random.Random`, so tests are deterministic.
 - **Stateless puzzle**: one POST form carries `letters`, `solution` and hidden `seed`/`arranged`.

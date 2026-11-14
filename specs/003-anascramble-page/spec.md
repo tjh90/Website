@@ -1,6 +1,6 @@
 # Feature Specification: Anascramble Page
 
-**Feature Branch**: `rewrite` (spec-kit feature id `003-anascramble-page`)
+**Feature Branch**: `main` (spec-kit feature id `003-anascramble-page`)
 
 **Created**: 2026-11-14
 
@@ -10,7 +10,12 @@
 
 ## Reference Implementation
 
-The Anascramble page on the `main` branch is the behavioural reference. It is a solving aid for
+> **Note**: The previous site was a Java/Vaadin implementation. It has since been removed from
+> this repository's history, so it can no longer be checked out. In the quoted input above,
+> "main" means that previous site. The behaviour summarised below is the complete record of the
+> reference.
+
+The previous implementation's Anascramble page is the behavioural reference. It is a solving aid for
 anagram puzzles (e.g. crossword anagram clues). Relevant behaviour:
 
 - The page is listed as "Anascramble" in the navigation drawer, directly after Home, and has its
@@ -58,7 +63,7 @@ Deliberate changes from the reference:
   more than HTML. Keep, reduce or drop them? → A: Keep all three (auto-advance, Backspace back,
   Space skip), driven by the server: the server's response decides where focus goes. No hand-written
   scripts; a short round-trip delay before focus moves is acceptable.
-- Q: Main accepts digits in the letters field but not in the solution boxes. How should digits be
+- Q: The previous implementation accepts digits in the letters field but not in the solution boxes. How should digits be
   handled? → A: Letters only, everywhere: the letters field no longer accepts digits.
 - Q: How should dimmed (already used) scrambled letters meet the accessibility contrast rule? → A:
   Treat dimmed letters as inactive and exempt them from the contrast requirement; keep the
@@ -295,9 +300,9 @@ unknown letters and Backspace to correct, and check which cell each letter appea
 
 ## Assumptions
 
-- "Implemented like the one on main" means the same visitor-facing behaviour, rebuilt with this
-  branch's technology stack and conventions, not a port of main's code.
-- The handwritten font is the one used on main (a freely licensed Google Font), self-hosted.
+- "Implemented like the one on main" means the same visitor-facing behaviour as the previous
+  implementation, rebuilt with this project's technology stack and conventions, not a port of its code.
+- The handwritten font is the one the previous implementation used (a freely licensed Google Font), self-hosted.
 - Character spacing and spread may differ slightly from the reference as long as letters cluster
   around the centre and FR-006 holds.
 - No answer checking, dictionary lookup or solving help is in scope; the page is a visual aid only.
