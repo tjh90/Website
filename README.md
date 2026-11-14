@@ -2,7 +2,7 @@
 
 [![CI build](https://github.com/tjh90/website/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/tjh90/website/actions/workflows/build.yml)
 
-Simple website. Built with Vaadin and Spring Boot.
+Simple website.
 
 ## Pages
 
@@ -10,12 +10,11 @@ Simple website. Built with Vaadin and Spring Boot.
 |-------|------|-------------|
 | `/` | Home | Landing page with external links (GitHub, PhD thesis, published paper) and a painting image |
 | `/anascramble` | Anascramble | Interactive anagram/word-scramble puzzle tool |
-| `/privacy` | Privacy | Privacy and cookie policy |
 
 ## Prerequisites
 
-- Java 25
-- Maven
+- Rust
+- Cargo
 - Docker & Docker Compose
 
 ## Building
@@ -23,18 +22,9 @@ Simple website. Built with Vaadin and Spring Boot.
 Run the following commands from the repository root:
 
 ``` shell
-# Compile web server code.
-mvn clean install -P prod
-
-# Build docker images.
-sudo docker-compose --file ./build/compose.yml build
+// TODO
 ```
 
 ## Deploying with Docker
 
-1. Copy your SSL certificate and key file to `./build/certs`
-2. Run the following command:
-
-```shell
-sudo docker-compose --file ./build/compose.yml up
-```
+// TODO
