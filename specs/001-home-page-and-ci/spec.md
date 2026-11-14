@@ -34,7 +34,8 @@ Out of scope for this feature (to be specified separately):
 
 - Anascramble.
 - Dark mode. A future feature will add a theme that follows the system preference by default,
-  plus a manual toggle remembered in a cookie (decided 2026-11-12).
+  plus a manual toggle remembered in a cookie (decided 2026-11-12; superseded 2026-11-14 by
+  feature 002, which stores nothing and sets no cookies).
 - The Privacy page. It existed only because the old framework needed cookies; instead, the About
   page states that the site uses no cookies.
 
@@ -315,8 +316,8 @@ over HTTPS with a valid certificate and HTTP redirects to HTTPS.
 - The decorative "Rock Salt" web font on the reference site is used only by Anascramble and is out
   of scope.
 - The site has no user accounts, forms or server-side state in this feature, so it needs no
-  session or CSRF cookies (unlike the reference). When the future dark-mode feature adds a theme
-  cookie, it must also update the About page's cookie statement.
+  session or CSRF cookies (unlike the reference). Feature 002 (dark mode) also sets no cookies, so
+  the About page's cookie statement stays accurate.
 - The external-link reachability test runs separately (e.g. scheduled or on demand) rather than as a
   merge-blocking gate, to avoid failures caused by third-party outages.
 - CI runs on GitHub Actions, as on the reference repository; deployment uses Docker Compose with
