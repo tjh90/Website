@@ -6,6 +6,10 @@ cannot identify an element.
 
 ## Common layout (every page, including 404)
 
+> Feature 002 extends this layout with the colour-scheme and htmx `<head>` entries, `hx-boost` on
+> `<body>`, the "Dark mode" switches in the drawer and the focusable heading after in-place
+> navigation. See [002's page layout contract](../../002-theme-switching/contracts/page-layout.md).
+
 ```text
 <html lang="en-GB">
   <head>

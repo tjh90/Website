@@ -13,13 +13,13 @@ from starlette.types import ASGIApp, Message, Receive, Scope, Send
 from website import routes
 from website.config import Settings, get_settings
 from website.content import NOT_FOUND_TITLE
-from website.templating import templates
+from website.templating import render
 
 _STATIC_DIR: Final = Path(__file__).parent / "static"
 
 SECURITY_HEADERS: Final[dict[str, str]] = {
     "Content-Security-Policy": (
-        "default-src 'self'; img-src 'self'; style-src 'self'; script-src 'none'; "
+        "default-src 'self'; img-src 'self'; style-src 'self'; script-src 'self'; "
         "frame-ancestors 'none'; base-uri 'none'; form-action 'self'"
     ),
     "X-Content-Type-Options": "nosniff",
@@ -72,7 +72,7 @@ async def _handle_http_exception(request: Request, exc: Exception) -> Response:
     if not isinstance(exc, StarletteHTTPException):  # Only registered for HTTP exceptions.
         raise exc
     if exc.status_code == 404:
-        return templates.TemplateResponse(
+        return render(
             request, "not_found.html", {"not_found_title": NOT_FOUND_TITLE}, status_code=404
         )
     return await http_exception_handler(request, exc)

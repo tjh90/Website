@@ -1,18 +1,31 @@
-/* Theme tokens: every colour is defined here so a dark theme can override them later. */
+/* Theme tokens: every colour is a light-dark() pair, and the color-scheme property on :root picks
+   which half applies. It follows the device preference by default; the Dark mode switch in the
+   drawer can flip it (see "Theme switch" below). color-scheme also themes scrollbars and form
+   controls. */
 :root {
-  --color-bg: #fff;
-  --color-text: #1a1a1a;
-  --color-link: #1a4fbf;
-  --color-header-bg: rgb(64 128 255);
-  --color-header-text: #fff;
-  --color-focus: #1a4fbf;
-  --color-icon: #000;
-  --color-nav-current-bg: #1a4fbf;
-  --color-nav-current-text: #fff;
-  --color-nav-hover-bg: #dbe6ff;
+  color-scheme: light;
+  --color-bg: light-dark(#fff, #121417);
+  --color-text: light-dark(#1a1a1a, #e6e6e6);
+  --color-link: light-dark(#1a4fbf, #a8cfff);
+  --color-header-bg: light-dark(rgb(64 128 255), rgb(64 128 255));
+  --color-header-text: light-dark(#fff, #fff);
+  --color-focus: light-dark(#1a4fbf, #a8cfff);
+  --color-icon: light-dark(#000, #e6e6e6);
+  --color-nav-current-bg: light-dark(#1a4fbf, #c0e0ff);
+  --color-nav-current-text: light-dark(#fff, #121417);
+  --color-nav-hover-bg: light-dark(#dbe6ff, #1f2a44);
   --menu-button-size: 44px;
   --space: 1rem;
   --header-height: 3.75rem;
+  /* Drawer slide durations, used by every drawer animation. */
+  --drawer-open-duration: 350ms;
+  --drawer-close-duration: 300ms;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+  }
 }
 
 *,
@@ -110,7 +123,8 @@ img {
   background: rgb(0 0 0 / 30%);
 }
 
-/* Items stack from the top; the last item (About) is pinned to the bottom of the drawer. */
+/* Page links stack from the top; the Dark mode item and the last page (About) are pinned to the
+   bottom of the drawer, with Dark mode directly above About. */
 .drawer ul {
   display: flex;
   flex-direction: column;
@@ -120,7 +134,7 @@ img {
   padding: 0;
 }
 
-.drawer li:last-child {
+.drawer .theme-item {
   margin-block-start: auto;
 }
 
@@ -141,10 +155,104 @@ img {
   font-weight: bold;
 }
 
+/* Theme switch. One switch per device preference; only the matching one is displayed (and so
+   exposed to assistive technology). Each starts in the state matching its device's theme, and
+   :has() flips color-scheme when the visible one is toggled. No JavaScript is involved. */
+.theme-switch {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space);
+  min-height: var(--menu-button-size);
+  padding: 0.75rem calc(var(--space) + 1rem);
+  cursor: pointer;
+}
+
+.theme-switch:hover {
+  background: var(--color-nav-hover-bg);
+}
+
+.theme-switch--dark-device {
+  display: none;
+}
+
+@media not (prefers-color-scheme: dark) {
+  :root:has(#dark-mode-light-device:checked) {
+    color-scheme: dark;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .theme-switch--light-device {
+    display: none;
+  }
+
+  .theme-switch--dark-device {
+    display: flex;
+  }
+
+  :root:has(#dark-mode-dark-device:not(:checked)) {
+    color-scheme: light;
+  }
+}
+
+/* The switch track and thumb, drawn with tokens so they follow the theme. */
+.theme-switch input {
+  appearance: none;
+  flex: none;
+  position: relative;
+  width: 2.75rem;
+  height: 1.5rem;
+  margin: 0;
+  border: 2px solid var(--color-text);
+  border-radius: 999px;
+  background: var(--color-bg);
+  cursor: pointer;
+}
+
+.theme-switch input::before {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  background: var(--color-text);
+}
+
+.theme-switch input:checked {
+  border-color: var(--color-nav-current-bg);
+  background: var(--color-nav-current-bg);
+}
+
+.theme-switch input:checked::before {
+  left: auto;
+  right: 2px;
+  background: var(--color-nav-current-text);
+}
+
+/* Drawer motion. Opening eases out over --drawer-open-duration; closing (menu button, Escape,
+   light dismiss) eases in over --drawer-close-duration. The closed state's transition is the one
+   that runs when closing, so each state carries its own timing. */
 @media (prefers-reduced-motion: no-preference) {
   .drawer[popover] {
-    transition: translate 0.2s ease-out, overlay 0.2s allow-discrete, display 0.2s allow-discrete;
     translate: 0 0;
+  }
+
+  .drawer[popover]:popover-open {
+    transition:
+      translate var(--drawer-open-duration) ease-out,
+      overlay var(--drawer-open-duration) ease-out allow-discrete,
+      display var(--drawer-open-duration) ease-out allow-discrete;
+  }
+
+  .drawer[popover]:not(:popover-open) {
+    translate: -100% 0;
+    transition:
+      translate var(--drawer-close-duration) ease-in,
+      overlay var(--drawer-close-duration) ease-in allow-discrete,
+      display var(--drawer-close-duration) ease-in allow-discrete;
   }
 
   @starting-style {
@@ -153,8 +261,70 @@ img {
     }
   }
 
-  .drawer[popover]:not(:popover-open) {
+  .drawer[popover]::backdrop {
+    opacity: 0;
+    transition:
+      opacity var(--drawer-close-duration) ease-in,
+      overlay var(--drawer-close-duration) ease-in allow-discrete,
+      display var(--drawer-close-duration) ease-in allow-discrete;
+  }
+
+  .drawer[popover]:popover-open::backdrop {
+    opacity: 1;
+    transition:
+      opacity var(--drawer-open-duration) ease-out,
+      overlay var(--drawer-open-duration) ease-out allow-discrete,
+      display var(--drawer-open-duration) ease-out allow-discrete;
+  }
+
+  @starting-style {
+    .drawer[popover]:popover-open::backdrop {
+      opacity: 0;
+    }
+  }
+}
+
+/* In-place navigation runs inside a view transition. The header stays put, the old drawer
+   slides out to the left, and the page content cross-fades quickly. */
+.drawer {
+  view-transition-name: nav-drawer;
+}
+
+.site-header {
+  view-transition-name: site-header;
+}
+
+@keyframes drawer-slide-out {
+  from {
+    translate: 0 0;
+  }
+
+  to {
     translate: -100% 0;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-old(nav-drawer) {
+    animation: drawer-slide-out var(--drawer-close-duration) ease-in both;
+  }
+
+  ::view-transition-new(nav-drawer) {
+    animation: none;
+  }
+
+  ::view-transition-group(root),
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 150ms;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none;
   }
 }
 

@@ -2,7 +2,10 @@
 
 [![CI](https://github.com/tjh90/website/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/tjh90/website/actions/workflows/ci.yml)
 
-Simple personal website, served by FastAPI with server-rendered Jinja2 templates.
+Simple personal website, served by FastAPI with server-rendered Jinja2 templates. The theme
+follows the visitor's light/dark preference, with a "Dark mode" switch in the navigation drawer;
+in-place navigation is provided by a vendored copy of [htmx](https://htmx.org). The site sets no
+cookies and stores nothing in the browser.
 
 ## Pages
 
@@ -70,11 +73,42 @@ instead:
 uv run pytest --browser-channel msedge
 ```
 
+Some browser tests (themes, the Dark mode switch, in-place navigation and drawer animations) must
+also pass in Firefox, and CI runs them there. Install Firefox once and run them with:
+
+```bash
+uv run playwright install firefox
+```
+
+```bash
+uv run pytest -m firefox --browser firefox
+```
+
 Check that the external links on the home page are reachable (run in CI on every PR as a non-blocking job):
 
 ```bash
 uv run pytest -m external
 ```
+
+## Vendored htmx
+
+htmx is served from `src/website/static/js/htmx.min.js` (currently 4.0.1) rather than a CDN.
+Dependabot cannot update it, so update it by hand:
+
+1. Download the release tarball from the npm registry,
+   `https://registry.npmjs.org/htmx.org/-/htmx.org-<version>.tgz`, into an empty temporary
+   directory.
+2. Check its integrity: the base64-encoded SHA-512 of the `.tgz` must match the `dist.integrity`
+   value from `https://registry.npmjs.org/htmx.org/<version>`:
+
+   ```bash
+   echo "sha512-$(openssl dgst -sha512 -binary htmx.org-<version>.tgz | base64 -w0)"
+   ```
+
+3. Extract `package/dist/htmx.min.js` and replace `src/website/static/js/htmx.min.js` with it,
+   unmodified.
+4. Update `HTMX_VERSION` in `tests/integration/test_static.py`, read the release notes for
+   breaking changes, and run all the quality checks (including the Firefox tests).
 
 ## Deploying with Docker
 

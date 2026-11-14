@@ -51,4 +51,7 @@ include = ["src", "tests"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "--strict-markers -m 'not external' --browser chromium"
-markers = ["external: hits real third-party URLs; run with -m external"]
+markers = [
+    "external: hits real third-party URLs; run with -m external",
+    "firefox: browser test that must also pass in Firefox; run with -m firefox --browser firefox",
+]

@@ -155,4 +155,11 @@ CREDITS: Final[tuple[Credit, ...]] = (
         licence="Public domain",
         licence_url=None,
     ),
+    Credit(
+        work="htmx",
+        author="Big Sky Software",
+        work_url="https://htmx.org",
+        licence="BSD Zero Clause License",
+        licence_url="https://opensource.org/license/0bsd",
+    ),
 )
