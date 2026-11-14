@@ -234,25 +234,35 @@ img {
 
 /* Drawer motion. Opening eases out over --drawer-open-duration; closing (menu button, Escape,
    light dismiss) eases in over --drawer-close-duration. The closed state's transition is the one
-   that runs when closing, so each state carries its own timing. */
+   that runs when closing, so each state carries its own timing.
+
+   Firefox cannot transition `display`, so a closing popover would vanish at once. Instead, the
+   closed drawer stays displayed, parked off-screen and `visibility: hidden` (which also removes it
+   from the tab order and accessibility tree). Visibility flips to hidden only once the slide-out
+   ends. `overlay` keeps the drawer and its backdrop in the top layer while closing where
+   supported (Chromium); elsewhere the z-index keeps the sliding drawer above the page. */
 @media (prefers-reduced-motion: no-preference) {
   .drawer[popover] {
+    z-index: 10;
     translate: 0 0;
   }
 
   .drawer[popover]:popover-open {
+    visibility: visible;
     transition:
       translate var(--drawer-open-duration) ease-out,
       overlay var(--drawer-open-duration) ease-out allow-discrete,
-      display var(--drawer-open-duration) ease-out allow-discrete;
+      visibility 0s;
   }
 
   .drawer[popover]:not(:popover-open) {
+    display: block;
+    visibility: hidden;
     translate: -100% 0;
     transition:
       translate var(--drawer-close-duration) ease-in,
       overlay var(--drawer-close-duration) ease-in allow-discrete,
-      display var(--drawer-close-duration) ease-in allow-discrete;
+      visibility 0s linear var(--drawer-close-duration);
   }
 
   @starting-style {
@@ -286,7 +296,9 @@ img {
 
 /* In-place navigation runs inside a view transition. The header stays put, the old drawer
    slides out to the left, and the page content cross-fades quickly. */
-.drawer {
+/* Only the open drawer is named: the closed drawer on the new page stays displayed (see above), and
+   naming it would make the group animate it too. */
+.drawer:popover-open {
   view-transition-name: nav-drawer;
 }
 

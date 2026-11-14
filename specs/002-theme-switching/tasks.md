@@ -393,7 +393,8 @@ Each increment passes all quality gates before moving on.
   `feat(theme): follow device colour preference`).
 - Never add an htmx extension, `hx-on` or inline script. If something seems to need JavaScript,
   stop and raise it with the user (constitution II).
-- Implementation note (2026-11-14): Playwright's Firefox cannot start on the development machine
-  (Windows reports a missing `mozglue` side-by-side assembly), so the `firefox`-marked tests and
-  the Firefox halves of T008, T013, T025, T029 and T034 were not run locally. They run in CI, which
-  installs Firefox (T002). T034, the manual walk-through, is left for the owner.
+- Implementation note (2026-11-14): Playwright's Firefox at first could not start on the
+  development machine, so the Firefox tests initially ran only in CI. Once it ran locally, they
+  exposed two Firefox-only bugs, now fixed (see research.md R6, "Firefox findings"): the drawer
+  vanished instead of sliding out, and a reload kept a toggled switch. All `firefox`-marked tests
+  now pass locally. T034, the manual walk-through, is left for the owner.

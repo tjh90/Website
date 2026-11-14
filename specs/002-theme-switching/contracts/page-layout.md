@@ -35,10 +35,10 @@ page links stay at the top).
     <li><a href="/" …>Home</a>
     <li class="theme-item">
       <label class="theme-switch theme-switch--light-device">
-        <input type="checkbox" role="switch" id="dark-mode-light-device" hx-preserve>
+        <input type="checkbox" role="switch" id="dark-mode-light-device" autocomplete="off" hx-preserve>
         Dark mode
       <label class="theme-switch theme-switch--dark-device">
-        <input type="checkbox" role="switch" id="dark-mode-dark-device" checked hx-preserve>
+        <input type="checkbox" role="switch" id="dark-mode-dark-device" checked autocomplete="off" hx-preserve>
         Dark mode
     <li><a href="/about" …>About</a>
 ```
@@ -53,6 +53,7 @@ page links stay at the top).
 - Activating anywhere on the label toggles the switch. The switch is keyboard-focusable and toggles
   with Space. The row meets the 44 px minimum target height.
 - The switch does not close the drawer.
+- `autocomplete="off"` stops Firefox restoring a toggled switch on reload (FR-014).
 - With JavaScript disabled, all of the above still works.
 
 ## Styling hooks (CSS contract)
@@ -62,7 +63,8 @@ page links stay at the top).
 | `:root` | `color-scheme: light`, or `dark` under `prefers-color-scheme: dark`; tokens use `light-dark()` |
 | `:root:has(#dark-mode-light-device:checked)` (light/none preference only) | `color-scheme: dark` |
 | `:root:has(#dark-mode-dark-device:not(:checked))` (dark preference only) | `color-scheme: light` |
-| `.drawer` | `view-transition-name: nav-drawer`; slides in over `--drawer-open-duration` (350 ms, ease-out) and out over `--drawer-close-duration` (300 ms, ease-in) |
+| `.drawer:popover-open` | `view-transition-name: nav-drawer` (closed drawer is unnamed) |
+| `.drawer` | closed state stays `display: block`, off-screen and `visibility: hidden` so it can slide out in Firefox; slides in over `--drawer-open-duration` (350 ms, ease-out) and out over `--drawer-close-duration` (300 ms, ease-in) |
 | `.site-header` | `view-transition-name: site-header` |
 | `::view-transition-old(nav-drawer)` | slides to `translate: -100% 0` over `--drawer-close-duration` |
 | `@media (prefers-reduced-motion: reduce)` | no drawer transition, no view-transition animation |

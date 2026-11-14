@@ -51,9 +51,13 @@ def _style(page: Page, prop: str, pseudo: str | None = None) -> str:
     )
 
 
-def _durations(value: str) -> set[str]:
-    """Split a computed transition-duration list into its distinct values."""
-    return {v.strip() for v in value.split(",")}
+def _transition(page: Page, prop: str, pseudo: str | None = None) -> tuple[str, str]:
+    """Return the computed (duration, timing function) of the drawer's transition for ``prop``."""
+    names = [v.strip() for v in _style(page, "transitionProperty", pseudo).split(",")]
+    durations = [v.strip() for v in _style(page, "transitionDuration", pseudo).split(",")]
+    timings = [v.strip() for v in _style(page, "transitionTimingFunction", pseudo).split(",")]
+    index = names.index(prop)
+    return durations[index], timings[index]
 
 
 @pytest.mark.firefox
@@ -75,13 +79,11 @@ def test_drawer_timings(page: Page) -> None:
     )
 
     open_drawer(page)
-    assert _durations(_style(page, "transitionDuration")) == {"0.35s"}
-    assert _style(page, "transitionTimingFunction").split(",")[0].strip() == "ease-out"
-    assert _durations(_style(page, "transitionDuration", "::backdrop")) == {"0.35s"}
+    assert _transition(page, "translate") == ("0.35s", "ease-out")
+    assert _transition(page, "opacity", "::backdrop") == ("0.35s", "ease-out")
 
     page.get_by_role("button", name="Menu").click()
-    assert _durations(_style(page, "transitionDuration")) == {"0.3s"}
-    assert _style(page, "transitionTimingFunction").split(",")[0].strip() == "ease-in"
+    assert _transition(page, "translate") == ("0.3s", "ease-in")
 
 
 @pytest.mark.firefox

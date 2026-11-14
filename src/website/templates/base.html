@@ -27,8 +27,8 @@
           is On exactly when the dark theme is shown. hx-preserve keeps them across in-place
           navigation. -#}
       <li class="theme-item">
-        <label class="theme-switch theme-switch--light-device">Dark mode <input type="checkbox" role="switch" id="dark-mode-light-device" hx-preserve></label>
-        <label class="theme-switch theme-switch--dark-device">Dark mode <input type="checkbox" role="switch" id="dark-mode-dark-device" checked hx-preserve></label>
+        <label class="theme-switch theme-switch--light-device">Dark mode <input type="checkbox" role="switch" id="dark-mode-light-device" autocomplete="off" hx-preserve></label>
+        <label class="theme-switch theme-switch--dark-device">Dark mode <input type="checkbox" role="switch" id="dark-mode-dark-device" checked autocomplete="off" hx-preserve></label>
       </li>
       {% endif %}
       <li><a href="{{ p.path }}"{% if p.name == current_page %} aria-current="page"{% endif %}>{{ p.nav_label }}</a></li>
