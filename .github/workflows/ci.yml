@@ -42,16 +42,18 @@ jobs:
           enable-cache: true
       - name: Install dependencies
         run: uv sync --locked
-      - name: Install Playwright browser
-        run: uv run playwright install --with-deps chromium
+      - name: Install Playwright browsers
+        run: uv run playwright install --with-deps chromium firefox
       - name: Run tests
         run: uv run pytest --junitxml=reports/junit.xml
+      - name: Run Firefox tests
+        run: uv run pytest -m firefox --browser firefox --junitxml=reports/junit-firefox.xml
       - name: Report test results
         uses: dorny/test-reporter@v3
         if: ${{ !cancelled() }}
         with:
           name: pytest results
-          path: reports/junit.xml
+          path: reports/junit*.xml
           reporter: java-junit
 
   test-external-links:

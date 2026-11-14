@@ -7,7 +7,7 @@ The application serves on port 8000. Every response carries the common headers b
 
 | Header | Value |
 |--------|-------|
-| `Content-Security-Policy` | `default-src 'self'; img-src 'self'; style-src 'self'; script-src 'none'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'` |
+| `Content-Security-Policy` (updated by feature 002) | `default-src 'self'; img-src 'self'; style-src 'self'; script-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'` |
 | `X-Content-Type-Options` | `nosniff` |
 | `Referrer-Policy` | `strict-origin-when-cross-origin` |
 

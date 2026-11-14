@@ -3,21 +3,34 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
   <title>{{ tab_title(page_title) }}</title>
   <link rel="stylesheet" href="{{ url_for('static', path='css/site.css').path }}">
+  <meta name="htmx-config" content='{"includeIndicatorCSS":false}'>
+  <script src="{{ url_for('static', path='js/htmx.min.js').path }}" defer></script>
   <link rel="icon" href="/favicon.ico">
 </head>
-<body>
+<body hx-boost:inherited="transition:true">
   <a class="skip-link" href="#content">Skip to content</a>
   <header class="site-header">
     <button type="button" class="menu-button" popovertarget="nav-drawer" aria-label="Menu">
       {%- include "icons/bars.svg" -%}
     </button>
-    <h1>{{ page_title }}</h1>
+    {#- After in-place navigation htmx focuses [autofocus], so the new page is announced. -#}
+    <h1{% if is_htmx_request %} tabindex="-1" autofocus{% endif %}>{{ page_title }}</h1>
   </header>
   <nav id="nav-drawer" class="drawer" popover aria-label="Main">
     <ul>
       {% for p in nav_pages %}
+      {% if loop.last %}
+      {#- Two switches, one per device preference; CSS shows only the matching one so the switch
+          is On exactly when the dark theme is shown. hx-preserve keeps them across in-place
+          navigation. -#}
+      <li class="theme-item">
+        <label class="theme-switch theme-switch--light-device">Dark mode <input type="checkbox" role="switch" id="dark-mode-light-device" hx-preserve></label>
+        <label class="theme-switch theme-switch--dark-device">Dark mode <input type="checkbox" role="switch" id="dark-mode-dark-device" checked hx-preserve></label>
+      </li>
+      {% endif %}
       <li><a href="{{ p.path }}"{% if p.name == current_page %} aria-current="page"{% endif %}>{{ p.nav_label }}</a></li>
       {% endfor %}
     </ul>

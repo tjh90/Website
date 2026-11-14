@@ -28,7 +28,9 @@ def _navigate_via_drawer(page: Page, target: SitePage) -> None:
     """Open the drawer from the current page and follow the link to ``target``."""
     menu_button(page).click()
     drawer(page).get_by_role("link", name=target.nav_label).click()
-    page.wait_for_load_state()
+    # Navigation may happen in place (htmx), so wait for the new page rather than a load event.
+    page.wait_for_url(f"**{target.path}")
+    expect(page.locator("h1")).to_have_text(target.title)
 
 
 def test_drawer_closed_on_load(page: Page) -> None:
@@ -105,7 +107,8 @@ def test_navigate_to_each_page(page: Page, target: SitePage) -> None:
     _navigate_via_drawer(page, target)
     assert page.url.endswith(target.path)
     expect(page.locator("h1")).to_have_text(target.title)
-    assert not is_drawer_open(page)
+    # Wait for the in-place swap: re-choosing the current page changes neither URL nor heading.
+    expect(page.locator("#nav-drawer:popover-open")).to_have_count(0)
     # The closed drawer is hidden, so select by href rather than accessible role.
     expect(drawer(page).locator(f'a[href="{target.path}"]')).to_have_attribute(
         "aria-current", "page"
@@ -146,8 +149,8 @@ def test_not_found_page(page: Page, base_url: str) -> None:
     assert response.status == 404
     expect(page.locator("h1")).to_have_text(NOT_FOUND_TITLE)
     page.locator("main").get_by_role("link").first.click()
-    page.wait_for_load_state()
-    assert page.url == f"{base_url}/"
+    page.wait_for_url(f"{base_url}/")
+    expect(page.locator("h1")).to_have_text(HOME.title)
 
 
 def test_every_page_in_registry_is_tested() -> None:

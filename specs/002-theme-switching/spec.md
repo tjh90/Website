@@ -49,6 +49,8 @@ Deliberate changes from the reference:
   it closes, including after choosing a page.
 - Q: How fast should the drawer slide? → A: The current 200 ms feels too fast (observed in
   Firefox). Open over about 350 ms and close over about 300 ms.
+- Q: Where should the Dark mode item sit in the drawer? → A: At the bottom, directly above About
+  (rather than straight after the page links, as in the reference).
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -212,8 +214,8 @@ reduced motion preferred and check it opens and closes instantly.
 
 #### Manual switching
 
-- **FR-006**: The navigation drawer MUST contain a theme control, placed after the page links and
-  before the bottom-pinned About link, as in the reference.
+- **FR-006**: The navigation drawer MUST contain a theme control, pinned to the bottom of the
+  drawer directly above the About link, with the page links staying at the top.
 - **FR-007**: The control MUST always carry the same accessible name and visible label, "Dark mode",
   and MUST be On exactly when the dark theme is shown and Off when the light theme is shown,
   regardless of whether the theme came from the device preference or a manual switch. Its state

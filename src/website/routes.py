@@ -15,7 +15,7 @@ from website.content import (
     LICENCE_URL,
     PAINTING_ALT,
 )
-from website.templating import templates
+from website.templating import render
 
 _FAVICON: Final = Path(__file__).parent / "static" / "favicon.ico"
 
@@ -54,7 +54,7 @@ def home(request: Request) -> HTMLResponse:
     Returns:
         The rendered page.
     """
-    return templates.TemplateResponse(
+    return render(
         request, "home.html", {"external_links": EXTERNAL_LINKS, "painting_alt": PAINTING_ALT}
     )
 
@@ -75,7 +75,7 @@ def about(request: Request) -> HTMLResponse:
     Returns:
         The rendered page.
     """
-    return templates.TemplateResponse(
+    return render(
         request,
         "about.html",
         {

@@ -16,8 +16,8 @@ def test_reach_about_via_drawer(page: Page) -> None:
     page.goto("/")
     page.get_by_role("button", name="Menu").click()
     page.locator("#nav-drawer").get_by_role("link", name=ABOUT.nav_label).click()
-    page.wait_for_load_state()
-    assert page.url.endswith(ABOUT.path)
+    page.wait_for_url(f"**{ABOUT.path}")
+    expect(page.locator("h1")).to_have_text(ABOUT.title)
 
 
 def test_source_link_opens_in_new_tab(page: Page) -> None:

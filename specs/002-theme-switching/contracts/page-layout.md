@@ -26,7 +26,8 @@ Everything not listed here is unchanged. Tests locate elements by role and acces
 
 ## Navigation drawer
 
-The "Dark mode" item sits after the page links and before the bottom-pinned About link.
+The "Dark mode" item is pinned to the bottom of the drawer, directly above the About link (the
+page links stay at the top).
 
 ```text
 <nav id="nav-drawer" popover aria-label="Main">
