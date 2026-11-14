@@ -3,10 +3,11 @@
 import pytest
 from playwright.sync_api import Browser, Locator, Page, expect
 
-from website.content import ABOUT, HOME, NOT_FOUND_TITLE, PAGES
+from website.content import ABOUT, ANASCRAMBLE, HOME, NOT_FOUND_TITLE, PAGES
 from website.content import Page as SitePage
 
-_PAGE_PARAMS = [pytest.param(HOME, id="home"), pytest.param(ABOUT, id="about")]
+_TESTED_PAGES = (HOME, ANASCRAMBLE, ABOUT)
+_PAGE_PARAMS = [pytest.param(p, id=p.name) for p in _TESTED_PAGES]
 
 
 def menu_button(page: Page) -> Locator:
@@ -155,4 +156,4 @@ def test_not_found_page(page: Page, base_url: str) -> None:
 
 def test_every_page_in_registry_is_tested() -> None:
     """Guard: the parametrised pages match the registry."""
-    assert {p.name for p in PAGES} == {HOME.name, ABOUT.name}
+    assert {p.name for p in PAGES} == {p.name for p in _TESTED_PAGES}

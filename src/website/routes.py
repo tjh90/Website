@@ -1,12 +1,13 @@
 """HTTP routes."""
 
 from pathlib import Path
-from typing import Final, Literal
+from typing import Annotated, Final, Literal
 
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Form, Request
 from fastapi.responses import FileResponse, HTMLResponse
 from pydantic import BaseModel
 
+from website.anascramble import Puzzle, parse_intent
 from website.content import (
     COOKIE_STATEMENT,
     CREDITS,
@@ -15,7 +16,7 @@ from website.content import (
     LICENCE_URL,
     PAINTING_ALT,
 )
-from website.templating import render
+from website.templating import is_htmx_request, render
 
 _FAVICON: Final = Path(__file__).parent / "static" / "favicon.ico"
 
@@ -85,6 +86,74 @@ def about(request: Request) -> HTMLResponse:
             "cookie_statement": COOKIE_STATEMENT,
         },
     )
+
+
+class AnascrambleForm(BaseModel):
+    """Raw Anascramble form submission.
+
+    Every field is a lenient string so that malformed or tampered input is sanitised by the domain
+    layer instead of being rejected with a validation error.
+
+    Attributes:
+        letters: The letters field.
+        solution: The solution field.
+        seed: Hidden seed of the arrangement currently shown.
+        arranged: Hidden letters the current arrangement was made from.
+        intent: What triggered the request: ``letters``, ``solution`` or ``scramble``.
+    """
+
+    letters: str = ""
+    solution: str = ""
+    seed: str = ""
+    arranged: str = ""
+    intent: str = ""
+
+
+@router.api_route(
+    "/anascramble",
+    methods=["GET", "HEAD"],
+    name="anascramble",
+    response_class=HTMLResponse,
+    include_in_schema=False,
+)
+def anascramble(request: Request) -> HTMLResponse:
+    """Render the Anascramble page with an empty puzzle.
+
+    Args:
+        request: The current request.
+
+    Returns:
+        The rendered page.
+    """
+    return render(request, "anascramble.html", {"puzzle": Puzzle.empty()})
+
+
+@router.post("/anascramble", response_class=HTMLResponse, include_in_schema=False)
+def anascramble_submit(request: Request, form: Annotated[AnascrambleForm, Form()]) -> HTMLResponse:
+    """Apply an Anascramble form submission.
+
+    htmx requests get only the out-of-band fragments that changed (contracts/http.md); plain
+    submissions (no JavaScript) get the whole page.
+
+    Args:
+        request: The current request.
+        form: The submitted form.
+
+    Returns:
+        The fragments or the rendered page, never cached.
+    """
+    intent = parse_intent(form.intent)
+    puzzle = Puzzle.from_form(
+        letters=form.letters,
+        solution=form.solution,
+        seed=form.seed,
+        arranged=form.arranged,
+        intent=intent,
+    )
+    template = "anascramble/_fragments.html" if is_htmx_request(request) else "anascramble.html"
+    response = render(request, template, {"puzzle": puzzle, "intent": intent})
+    response.headers["Cache-Control"] = "no-store"
+    return response
 
 
 @router.get("/favicon.ico", include_in_schema=False)

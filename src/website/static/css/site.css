@@ -1,3 +1,13 @@
+/* Handwritten display font for the Anascramble page (Rock Salt, Apache License 2.0; licence in
+   ../fonts/rock-salt-LICENSE.txt). */
+@font-face {
+  font-family: "Rock Salt";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/rock-salt-latin-400-normal.woff2") format("woff2");
+}
+
 /* Theme tokens: every colour is a light-dark() pair, and the color-scheme property on :root picks
    which half applies. It follows the device preference by default; the Dark mode switch in the
    drawer can flip it (see "Theme switch" below). color-scheme also themes scrollbars and form
@@ -400,4 +410,147 @@ main section {
   .painting {
     flex: 0 1 746px;
   }
+}
+
+/* Anascramble page: one centred column (scramble area, solution row, letters field, button). */
+.anascramble {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space);
+  width: 100%;
+  max-width: 400px;
+  margin-inline: auto;
+  container-type: inline-size;
+}
+
+/* The scramble area is SVG so letters are positioned by attributes, not inline styles (CSP).
+   It scales to the available width; the server sizes the view box to fit every letter. */
+.scramble {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+}
+
+.scramble-letter {
+  font-family: "Rock Salt", cursive;
+  font-size: 32px;
+  fill: var(--color-link);
+}
+
+/* Letters used by the solution are faded and marked inactive (aria-disabled), so they are exempt
+   from the contrast requirement (spec FR-012). */
+.scramble-letter.dimmed {
+  opacity: 0.25;
+}
+
+.letters-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  width: 100%;
+}
+
+.anascramble input[type="text"] {
+  min-height: var(--menu-button-size);
+  padding: 0.5rem 0.75rem;
+  border: 2px solid var(--color-text);
+  border-radius: 0.25rem;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font: inherit;
+}
+
+.primary-button {
+  min-width: var(--menu-button-size);
+  min-height: var(--menu-button-size);
+  padding: 0.5rem 1.5rem;
+  border: 0;
+  border-radius: 0.25rem;
+  background: var(--color-nav-current-bg);
+  color: var(--color-nav-current-text);
+  font: inherit;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.primary-button[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Solution field: one text input laid over a row of cells (one per letter). The browser's own
+   editing gives advance, Backspace and Space (a blank). In a monospace font every character is
+   1ch wide, so letter-spacing of (cell - 1ch) and half that as start padding centre each
+   character in its cell. The cells set the width (the input has zero intrinsic width and
+   stretches to fill), and the end padding on the cells absorbs the spacing after the last
+   character so a full field never scrolls. */
+.solution-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  max-width: 100%;
+}
+
+.solution-row[hidden] {
+  display: none;
+}
+
+.solution-field {
+  --cell-width: 2ch;
+  --cell-pad: calc((var(--cell-width) - 1ch) / 2);
+  display: grid;
+  max-width: 100%;
+  overflow-x: auto;
+  font-family: ui-monospace, "Cascadia Mono", "Segoe UI Mono", "DejaVu Sans Mono", monospace;
+  /* Shrink the cells so the row fits the column: about 1.2em per cell. */
+  font-size: min(1.5rem, 100cqi / 12.5);
+}
+
+.solution-field:has(.solution-cells > :nth-child(11)) {
+  font-size: min(1.5rem, 100cqi / 24.5);
+}
+
+.solution-field:has(.solution-cells > :nth-child(21)) {
+  /* Below this floor letters get too small to read; the row scrolls within itself instead. */
+  font-size: max(0.875rem, min(1.5rem, 100cqi / 36.5));
+}
+
+.solution-cells,
+.anascramble .solution-field input {
+  grid-area: 1 / 1;
+}
+
+.solution-cells {
+  display: flex;
+  padding-inline-end: calc(var(--cell-pad) + 2px);
+}
+
+.solution-cells span {
+  flex: none;
+  width: var(--cell-width);
+  height: 2.2em;
+  /* An underline per cell, inset so neighbouring cells stay visibly separate. */
+  background: linear-gradient(var(--color-text), var(--color-text)) center bottom /
+    calc(100% - 0.4ch) 3px no-repeat;
+}
+
+.anascramble .solution-field input {
+  width: 0;
+  min-width: 100%;
+  min-height: 0;
+  margin: 0;
+  padding: 0 0 0 var(--cell-pad);
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  font: inherit;
+  letter-spacing: calc(var(--cell-width) - 1ch);
+  text-transform: uppercase;
+}
+
+.anascramble .solution-field input:focus-visible {
+  outline-offset: 4px;
 }

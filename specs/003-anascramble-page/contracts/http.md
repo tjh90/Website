@@ -31,7 +31,7 @@ malformed or tampered field values: they are sanitised.
 |---|---|---|
 | `scramble` | always | The scramble SVG (empty `<svg>` when no arrangement) |
 | `puzzle-state` | always | Hidden `seed` and `arranged` inputs |
-| `scramble-button` | always | The button with the correct `disabled` state |
+| `scramble-button` | always | The button, with `aria-disabled="true"` when fewer than 3 letters |
 | `solution-row` | `intent != "solution"` | Whole row: label, cells and input (reset or kept per data model), `hidden` when fewer than 3 letters |
 | `solution` | `intent == "solution"` and `solution_corrected` | The solution input alone, with the corrected value |
 | `letters` | `letters_corrected` | The letters input with the corrected value |
@@ -46,7 +46,7 @@ selection by `id` if it was focused (Enter pressed in the solution field).
 | Request | Response fragments |
 |---|---|
 | `intent=letters`, `letters=lette` | `scramble` (empty), `puzzle-state` (empty), `scramble-button` (enabled), `solution-row` (5 cells, empty input with `maxlength=5`) |
-| `intent=letters`, `letters=le7` | as above for `LE` (button disabled, row `hidden`), plus `letters` with value `LE` |
+| `intent=letters`, `letters=le7` | as above for `LE` (button `aria-disabled`, row `hidden`), plus `letters` with value `LE` |
 | `intent=scramble`, `letters=letter` | new `scramble` (6 letters), `puzzle-state` (new seed, `arranged=LETTER`), `scramble-button`, `solution-row` (solution kept) |
 | `intent=solution`, `solution=TTT`, valid seed | `scramble` (two T dimmed, same positions), `puzzle-state`, `scramble-button`, `solution` with `TT` |
 | `intent=solution`, `solution=T E`, valid seed | `scramble` (T and E dimmed), `puzzle-state`, `scramble-button`; no `solution` fragment |

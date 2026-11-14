@@ -49,3 +49,28 @@ def test_no_serious_violations_after_manual_switch(browser: Browser, base_url: s
     page.wait_for_timeout(400)
     _assert_no_blocking_violations(page)
     context.close()
+
+
+@pytest.mark.parametrize("color_scheme", ["light", "dark"])
+@pytest.mark.parametrize("state", ["empty", "scrambled", "dimmed"])
+def test_anascramble_no_serious_violations(
+    browser: Browser, base_url: str, color_scheme: Literal["light", "dark"], state: str
+) -> None:
+    """The Anascramble page passes axe before and after scrambling and with dimmed letters.
+
+    The colour-contrast rule stays on: dimmed letters are exempt because they are marked
+    inactive with aria-disabled (feature 003 FR-012, FR-020).
+    """
+    context = browser.new_context(base_url=base_url, color_scheme=color_scheme)
+    page = context.new_page()
+    page.goto("/anascramble")
+    if state != "empty":
+        page.locator("#letters").press_sequentially("letter")
+        page.wait_for_load_state("networkidle")
+        page.get_by_role("button", name="Scramble!").click()
+        page.locator("#scramble text").first.wait_for()
+    if state == "dimmed":
+        page.locator("#solution").press_sequentially("tt")
+        page.locator("#scramble text.dimmed").nth(1).wait_for()
+    _assert_no_blocking_violations(page)
+    context.close()

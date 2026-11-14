@@ -5,6 +5,7 @@ import pytest
 from website.config import Settings
 from website.content import (
     ABOUT,
+    ANASCRAMBLE,
     COOKIE_STATEMENT,
     CREDITS,
     EXTERNAL_LINKS,
@@ -23,9 +24,10 @@ _FULL_SHA = "0123456789abcdef0123456789abcdef01234567"
 
 
 def test_pages_registry() -> None:
-    """The navigation lists Home then About with the expected metadata."""
+    """The navigation lists Home, Anascramble then About with the expected metadata."""
     assert [(p.name, p.path, p.title, p.nav_label) for p in PAGES] == [
         ("home", "/", "Tim's Page", "Home"),
+        ("anascramble", "/anascramble", "Anascramble", "Anascramble"),
         ("about", "/about", "About", "About"),
     ]
 
@@ -38,7 +40,11 @@ def test_page_names_and_paths_are_unique() -> None:
 
 @pytest.mark.parametrize(
     ("title", "expected"),
-    [(HOME.title, "Tim's Page"), (ABOUT.title, "About · Tim's Page")],
+    [
+        (HOME.title, "Tim's Page"),
+        (ANASCRAMBLE.title, "Anascramble · Tim's Page"),
+        (ABOUT.title, "About · Tim's Page"),
+    ],
 )
 def test_tab_title(title: str, expected: str) -> None:
     """The home tab shows the site title; other tabs are suffixed with it."""
@@ -127,6 +133,13 @@ def test_credits() -> None:
             work_url="https://htmx.org",
             licence="BSD Zero Clause License",
             licence_url="https://opensource.org/license/0bsd",
+        ),
+        Credit(
+            work="Rock Salt font",
+            author="Sideshow",
+            work_url="https://fonts.google.com/specimen/Rock+Salt",
+            licence="Apache License 2.0",
+            licence_url="https://www.apache.org/licenses/LICENSE-2.0",
         ),
     ) == CREDITS
 

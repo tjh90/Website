@@ -35,10 +35,13 @@ class Page:
 
 
 HOME: Final = Page(name="home", path="/", title=SITE_TITLE, nav_label="Home")
+ANASCRAMBLE: Final = Page(
+    name="anascramble", path="/anascramble", title="Anascramble", nav_label="Anascramble"
+)
 ABOUT: Final = Page(name="about", path="/about", title="About", nav_label="About")
 # Navigation order. The last page (About) is pinned to the bottom of the drawer, so add new
 # pages before it.
-PAGES: Final[tuple[Page, ...]] = (HOME, ABOUT)
+PAGES: Final[tuple[Page, ...]] = (HOME, ANASCRAMBLE, ABOUT)
 
 
 def tab_title(title: str) -> str:
@@ -161,5 +164,12 @@ CREDITS: Final[tuple[Credit, ...]] = (
         work_url="https://htmx.org",
         licence="BSD Zero Clause License",
         licence_url="https://opensource.org/license/0bsd",
+    ),
+    Credit(
+        work="Rock Salt font",
+        author="Sideshow",
+        work_url="https://fonts.google.com/specimen/Rock+Salt",
+        licence="Apache License 2.0",
+        licence_url="https://www.apache.org/licenses/LICENSE-2.0",
     ),
 )

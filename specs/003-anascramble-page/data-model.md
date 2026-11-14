@@ -13,9 +13,9 @@ model, which lives in `website.routes`.
 | `START_RADIUS` | 50.0 | Main's `DEFAULT_INITIAL_OFFSET` |
 | `RADIUS_STEP` | 5.0 | Main's `DEFAULT_OFFSET_INCR` |
 | `TRIES_PER_STEP` | 10 | Main (`tries % 10`) |
-| `MIN_SPACING` | 50.0 | Main's `BUFFER_ZONE` |
+| `MIN_SPACING` | 58.0 | Square clearance; main's circular 50 let Rock Salt ink overlap (research R3) |
 | `MIN_VIEW_SIZE` | 400.0 | Main's 400 px container (R2) |
-| `VIEW_MARGIN` | 30.0 | Keeps glyphs (≈ 32-unit font) fully inside the box |
+| `VIEW_MARGIN` | 40.0 | Keeps glyph ink (up to 49 units, off-centre) fully inside the box |
 
 ## AnascrambleForm (Pydantic, request body)
 
@@ -76,8 +76,8 @@ clears the solution even if the old solution would still be valid.
 then shuffles the list with the same `rng` (FR-019 reading order). For a given seed the result is
 identical every time (FR-008).
 
-Invariants (tested, SC-003): every index appears once; distance between any two centres is at least
-`MIN_SPACING`.
+Invariants (tested, SC-003): every index appears once; any two centres are at least `MIN_SPACING`
+apart horizontally or vertically.
 
 ## ViewBox (domain)
 

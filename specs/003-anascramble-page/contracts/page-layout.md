@@ -46,7 +46,7 @@ Tests rely on the ids, roles and attributes below. No element may carry a `style
   </div>
 
   <button id="scramble-button" type="submit" name="intent" value="scramble"
-          class="primary" [disabled]>Scramble!</button>
+          class="primary-button" [aria-disabled="true"]>Scramble!</button>
 </form>
 ```
 
@@ -70,8 +70,10 @@ Tests rely on the ids, roles and attributes below. No element may carry a `style
     `.solution-field` has `overflow-x: auto` as the last resort (no page scroll at 320 px).
   - No script or attribute moves focus; htmx never targets `#solution` unless its value was
     corrected.
-- **Button**: `disabled` when fewer than 3 valid letters. Without JS it is rendered enabled once the
-  page has 3+ letters, and native validation guards the empty case. Primary styling uses the
+- **Button**: `aria-disabled="true"` (styled as disabled) when fewer than 3 valid letters. Not the
+  `disabled` attribute: a disabled default button blocks implicit submission (Enter) without JS.
+  Native validation (`required`, `minlength`, `pattern`) on the letters field blocks short
+  submissions, and the server never scrambles fewer than 3 letters. Primary styling uses the
   existing accent tokens in both themes; touch target at least 44 × 44 CSS px, as for other
   controls.
 - **Labels**: visible text labels for both fields; the SVG has an accessible name.

@@ -56,7 +56,7 @@ def test_menu_current_and_hover_highlights(page: Page) -> None:
     page.goto("/")
     page.get_by_role("button", name="Menu").click()
     current = '#nav-drawer a[aria-current="page"]'
-    other = "#nav-drawer a:not([aria-current])"
+    other = '#nav-drawer a[href="/about"]'
     assert _style(page, current, "backgroundColor") == "rgb(26, 79, 191)"
     assert _style(page, other, "backgroundColor") == "rgba(0, 0, 0, 0)"
     page.locator(other).hover()
