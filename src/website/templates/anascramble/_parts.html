@@ -1,0 +1,59 @@
+{#- Anascramble page parts. The full page and the htmx responses render from these macros, so the
+    markup is identical. With oob=true the root element carries hx-swap-oob, replacing the element
+    with the same id. No style attributes anywhere: the CSP forbids inline styles. -#}
+
+{#- Attributes shared by every element that posts the form as the visitor types. -#}
+{% macro _live(intent) -%}
+hx-post="/anascramble" hx-trigger="input" hx-swap="none" hx-sync="closest form:replace" hx-vals='{"intent":"{{ intent }}"}'
+{%- endmacro %}
+
+{% macro _oob(oob) %}{% if oob %} hx-swap-oob="true"{% endif %}{% endmacro %}
+
+{% macro scramble_svg(puzzle, oob=false) -%}
+{%- set placed = puzzle.arrangement -%}
+{%- set box = puzzle.view_box -%}
+<svg id="scramble" class="scramble"{{ _oob(oob) }} viewBox="{{ box | join(' ') }}" xmlns="http://www.w3.org/2000/svg"
+     {%- if placed %} role="group" aria-label="Scrambled letters"{% else %} aria-hidden="true"{% endif %}>
+  {%- for p in placed %}
+  {%- set dimmed = puzzle.claimed[p.index] %}
+  <text x="{{ p.x }}" y="{{ p.y }}" class="scramble-letter{% if dimmed %} dimmed{% endif %}" text-anchor="middle" dominant-baseline="central"{% if dimmed %} aria-disabled="true"{% endif %}>{{ p.letter }}</text>
+  {%- endfor %}
+</svg>
+{%- endmacro %}
+
+{% macro puzzle_state(puzzle, oob=false) -%}
+<div id="puzzle-state"{{ _oob(oob) }}>
+  <input type="hidden" name="seed" value="{{ puzzle.seed if puzzle.seed is not none else '' }}">
+  <input type="hidden" name="arranged" value="{{ puzzle.letters if puzzle.seed is not none else '' }}">
+</div>
+{%- endmacro %}
+
+{#- aria-disabled rather than disabled: a disabled default button would block pressing Enter to
+    submit without JavaScript. Native validation on the letters field blocks short input. -#}
+{% macro scramble_button(puzzle, oob=false) -%}
+<button id="scramble-button" class="primary-button" type="submit" name="intent" value="scramble"{{ _oob(oob) }}{% if not puzzle.can_scramble %} aria-disabled="true"{% endif %}>Scramble!</button>
+{%- endmacro %}
+
+{% macro letters_input(puzzle, oob=false) -%}
+<input id="letters" name="letters" type="text" maxlength="30" minlength="3" pattern="[A-Za-z]{3,30}" required
+       autocomplete="off" autocapitalize="characters" spellcheck="false"
+       {{ _live("letters") }} value="{{ puzzle.letters }}"{{ _oob(oob) }}>
+{%- endmacro %}
+
+{% macro solution_input(puzzle, oob=false) -%}
+<input id="solution" name="solution" type="text" maxlength="{{ puzzle.letters | length }}" pattern="[A-Za-z ]*"
+       autocomplete="off" autocapitalize="characters" spellcheck="false"
+       {{ _live("solution") }} value="{{ puzzle.solution }}"{{ _oob(oob) }}>
+{%- endmacro %}
+
+{% macro solution_row(puzzle, oob=false) -%}
+<div id="solution-row" class="solution-row"{{ _oob(oob) }}{% if not puzzle.shows_solution %} hidden{% endif %}>
+  <label for="solution">Solution:</label>
+  <div class="solution-field">
+    <div id="solution-cells" class="solution-cells" aria-hidden="true">
+      {%- if puzzle.shows_solution %}{% for _ in puzzle.letters %}<span></span>{% endfor %}{% endif -%}
+    </div>
+    {{ solution_input(puzzle) }}
+  </div>
+</div>
+{%- endmacro %}

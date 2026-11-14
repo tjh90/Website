@@ -1,0 +1,9 @@
+{#- htmx response for the Anascramble form: out-of-band fragments only (contracts/http.md). The
+    field the visitor is typing in is only sent back when the server changed its value, so the
+    caret and any keys typed meanwhile are kept. -#}
+{% from "anascramble/_parts.html" import scramble_svg, puzzle_state, scramble_button, solution_row, solution_input, letters_input %}
+{{ scramble_svg(puzzle, oob=true) }}
+{{ puzzle_state(puzzle, oob=true) }}
+{{ scramble_button(puzzle, oob=true) }}
+{% if intent != "solution" %}{{ solution_row(puzzle, oob=true) }}{% elif puzzle.solution_corrected %}{{ solution_input(puzzle, oob=true) }}{% endif %}
+{% if puzzle.letters_corrected %}{{ letters_input(puzzle, oob=true) }}{% endif %}

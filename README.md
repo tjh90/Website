@@ -12,6 +12,7 @@ cookies and stores nothing in the browser.
 | Route | Page | Description |
 |-------|------|-------------|
 | `/` | Home | Landing page with external links (GitHub, PhD thesis, published paper) and a painting |
+| `/anascramble` | Anascramble | Anagram solving aid: scrambles letters and tracks a partial solution |
 | `/about` | About | Licence, source code link, and running revision, cookie statement and credits |
 
 ## Prerequisites

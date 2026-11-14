@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% from "anascramble/_parts.html" import scramble_svg, solution_row, letters_input, puzzle_state, scramble_button %}
+{% set page_title = "Anascramble" %}
+{% set current_page = "anascramble" %}
+{% block content %}
+<form id="anascramble" class="anascramble" method="post" action="/anascramble"
+      hx-post="/anascramble" hx-swap="none" hx-sync="this:replace">
+  {{ scramble_svg(puzzle) }}
+  {{ solution_row(puzzle) }}
+  <div class="letters-field">
+    <label for="letters">Letters to scramble</label>
+    {{ letters_input(puzzle) }}
+  </div>
+  {{ puzzle_state(puzzle) }}
+  {{ scramble_button(puzzle) }}
+</form>
+{% endblock %}

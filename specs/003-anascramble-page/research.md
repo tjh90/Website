@@ -45,8 +45,13 @@ the npm registry and the site's existing CSP (`src/website/app.py`).
 - **Decision**: Port main's algorithm to a pure Python module: for each character, pick a random
   angle at the current radius; if the point is within the minimum distance of an earlier one, retry,
   growing the radius by a fixed step every 10 tries. Positions are relative to the origin. Then the
-  `viewBox` is fitted (R2). Constants: start radius 50, step 5, minimum distance 50 units (matches
-  main's 32 px font in a 400 px area).
+  `viewBox` is fitted (R2). Constants: start radius 50, step 5, as on main.
+- **Spacing (changed during implementation)**: main kept centres 50 units apart (a circle). Measured
+  with canvas text metrics, Rock Salt capitals at 32 units have ink boxes up to 49 × 49 units, and
+  that spacing let ink overlap in 55% of 1,000 random layouts. A square clearance (Chebyshev
+  distance) of 58 units gave no overlaps in 1,000 layouts, with a 40-unit view-box margin keeping
+  all ink inside. Long inputs therefore spread slightly further (view box up to about 540 units for
+  30 letters) and scale down a little more.
 - **Rationale**: Same visual result as main (letters cluster round the centre, spreading for longer
   inputs). Termination is guaranteed because the radius keeps growing.
 - **Randomness**: functions take a `random.Random` instance (constitution IV: injectable seeds). The
@@ -101,6 +106,11 @@ the npm registry and the site's existing CSP (`src/website/app.py`).
     are overwritten. This only happens straight after a refused key, and the next `input` event
     corrects the state. Accepted as within FR-015's intent (accepted characters are not lost:
     the next request re-sends them).
+- **Measured in implementation**: htmx 4 restores focus and the old caret offset after a corrected
+  field is swapped in. When the refused character was typed at the end (the usual case) the caret
+  is exactly right. When it was typed mid-word, the restored offset still counts the removed
+  character, so the caret lands one cell to the right. HTML cannot set a caret position, so fixing
+  this would need script. Accepted as a known limitation.
 - **Alternatives considered**: swapping the whole form (loses caret and pending keys); a delay on
   `input` (slower feedback, SC-002); reading htmx's `HX-Source` header instead of `intent` (couples
   the server to element ids).
