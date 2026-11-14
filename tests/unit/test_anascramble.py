@@ -98,8 +98,8 @@ def test_scramble_shuffles_reading_order() -> None:
 
 
 def test_view_box_default() -> None:
-    """With no letters the view box is the 400-unit square centred on the origin."""
-    assert view_box([]) == (-200.0, -200.0, 400.0, 400.0)
+    """With no letters the view box is the 320-unit square centred on the origin."""
+    assert view_box([]) == (-160.0, -160.0, 320.0, 320.0)
 
 
 def test_view_box_contains_every_letter() -> None:

@@ -16,7 +16,7 @@ Tests rely on the ids, roles and attributes below. No element may carry a `style
 <form id="anascramble" class="anascramble" method="post" action="/anascramble"
       hx-post="/anascramble" hx-swap="none" hx-sync="this:replace">
 
-  <svg id="scramble" class="scramble" viewBox="-200 -200 400 400"
+  <svg id="scramble" class="scramble" viewBox="-160 -160 320 320"
        role="group" aria-label="Scrambled letters">
     <!-- one per letter, in shuffled order -->
     <text x="12.3" y="-40.1" class="scramble-letter">E</text>
@@ -54,7 +54,9 @@ Tests rely on the ids, roles and attributes below. No element may carry a `style
 
 - **Order** (FR-003): scramble area, solution row, letters field, button, all centred in one column.
 - **Scramble SVG** (FR-005–FR-007, FR-019):
-  - `viewBox` from `view_box()`; `width: 100%`, `max-width: 400px`, `aspect-ratio: 1` in CSS.
+  - `viewBox` from `view_box()`; `aspect-ratio: 1`, at most 320 px and the column width, and on
+    short screens no larger than the viewport height (`svh`) minus the rest of the page, so the
+    button stays on screen.
   - `<text>` uses `text-anchor="middle"` and `dominant-baseline="central"` so `(x, y)` is the glyph
     centre. Font: Rock Salt, about 32 user units, colour from a `light-dark()` accent token.
   - Text elements appear in the shuffled order from `scramble()`.
@@ -63,7 +65,9 @@ Tests rely on the ids, roles and attributes below. No element may carry a `style
   - Empty arrangement: the `<svg>` is still rendered (keeps layout stable) with no children and
     `aria-hidden="true"`.
 - **Solution row** (FR-010, FR-011, FR-015):
-  - `hidden` attribute when fewer than 3 letters; no solution input value in that case.
+  - `hidden` attribute when fewer than 3 letters; no solution input value in that case. A hidden
+    row keeps its space (`visibility: hidden`), and the field has a fixed height whatever the cell
+    count, so the letters field and button never move while typing.
   - Cells and input are stacked in the same grid area; input background transparent, monospace,
     `letter-spacing` and padding aligned to the cell width token.
   - Cell width token reduced at 11+ and 21+ cells via `.solution-cells:has(> :nth-child(11))` etc.;

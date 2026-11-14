@@ -417,18 +417,31 @@ main section {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space);
+  gap: 0.5rem;
   width: 100%;
   max-width: 400px;
   margin-inline: auto;
   container-type: inline-size;
+  /* Height of everything on the page except the scramble area (header, main padding, solution
+     row, letters field, button and the gaps between them, about 19rem) plus 2rem of
+     breathing room below the button, so the area can shrink to keep the button comfortably on
+     screen. The page never changes height as the visitor types. */
+  --anascramble-rest: 21rem;
+}
+
+/* The scramble area has its own empty margin, so the page needs less above it. */
+main:has(> .anascramble) {
+  padding-block-start: 0.5rem;
 }
 
 /* The scramble area is SVG so letters are positioned by attributes, not inline styles (CSP).
-   It scales to the available width; the server sizes the view box to fit every letter. */
+   At most 320px, matching the smallest view box (320 units), so letters are drawn at their
+   natural size until the view box grows for long inputs. It shrinks to the available width,
+   and on short screens to the height left over (svh: the height with mobile browser toolbars
+   shown); the server sizes the view box to fit every letter. */
 .scramble {
   display: block;
-  width: 100%;
+  width: min(100%, 320px, max(10rem, 100svh - var(--anascramble-rest)));
   height: auto;
   aspect-ratio: 1;
 }
@@ -494,16 +507,23 @@ main section {
   max-width: 100%;
 }
 
+/* A hidden row keeps its space, so the fields below never move as letters are typed.
+   visibility: hidden also removes it from the accessibility tree and the tab order. */
 .solution-row[hidden] {
-  display: none;
+  display: flex;
+  visibility: hidden;
 }
 
 .solution-field {
   --cell-width: 2ch;
   --cell-pad: calc((var(--cell-width) - 1ch) / 2);
   display: grid;
+  align-content: start;
   max-width: 100%;
+  /* Fixed height (the cells' height plus room for a thin scrollbar), whatever the cell count. */
+  block-size: 3.25rem;
   overflow-x: auto;
+  scrollbar-width: thin;
   font-family: ui-monospace, "Cascadia Mono", "Segoe UI Mono", "DejaVu Sans Mono", monospace;
   /* Shrink the cells so the row fits the column: about 1.2em per cell. */
   font-size: min(1.5rem, 100cqi / 12.5);
@@ -531,7 +551,8 @@ main section {
 .solution-cells span {
   flex: none;
   width: var(--cell-width);
-  height: 2.2em;
+  /* rem, not em: the font shrinks with the cell count but the row's height stays the same. */
+  height: 2.75rem;
   /* An underline per cell, inset so neighbouring cells stay visibly separate. */
   background: linear-gradient(var(--color-text), var(--color-text)) center bottom /
     calc(100% - 0.4ch) 3px no-repeat;

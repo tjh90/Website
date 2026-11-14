@@ -6,10 +6,11 @@ from collections.abc import Callable
 from typing import Final
 
 import pytest
-from playwright.sync_api import Browser, Locator, Page, expect
+from playwright.sync_api import Browser, Locator, Page, ViewportSize, expect
 
 _PATH: Final = "/anascramble"
 _FEEDBACK_TIMEOUT: Final = 1_000  # SC-002: feedback well within a second on localhost.
+_BOTTOM_ROOM: Final = 24  # Minimum CSS px between the button and the bottom of the screen.
 
 
 def _letters(page: Page) -> Locator:
@@ -395,6 +396,49 @@ def test_fits_narrow_screen(browser: Browser, base_url: str) -> None:
     assert area is not None
     assert area["width"] <= 320
     _assert_inside_without_overlap(page)
+    context.close()
+
+
+def _control_tops(page: Page) -> tuple[float, float]:
+    """The top edges of the letters field and the button, in CSS pixels.
+
+    Read in one step: htmx replaces the button on every response.
+    """
+    letters, button = page.evaluate(
+        "['letters', 'scramble-button'].map(id => document.getElementById(id)"
+        ".getBoundingClientRect().top)"
+    )
+    return (letters, button)
+
+
+@pytest.mark.parametrize(
+    "viewport",
+    [
+        ViewportSize(width=1280, height=720),
+        ViewportSize(width=375, height=667),
+        ViewportSize(width=320, height=568),
+    ],
+    ids=["desktop", "phone", "small-phone"],
+)
+def test_controls_stay_put_and_on_screen(
+    browser: Browser, base_url: str, viewport: ViewportSize
+) -> None:
+    """Typing and scrambling never move the field or button, which stay clear of the bottom."""
+    context = browser.new_context(base_url=base_url, viewport=viewport)
+    page = context.new_page()
+    page.goto(_PATH)
+    page.evaluate("document.fonts.ready")
+    tops = _control_tops(page)
+    for count, letter in enumerate("abcdefghijklmnopqrstuvwxyzabcd", start=1):
+        _type_letters(page, letter)
+        assert _control_tops(page) == tops, f"moved at {count} letters"
+    _scramble_button(page).click()
+    expect(_placed(page)).to_have_count(30, timeout=_FEEDBACK_TIMEOUT)
+    assert _control_tops(page) == tops
+    bottom = page.evaluate(
+        "document.getElementById('scramble-button').getBoundingClientRect().bottom"
+    )
+    assert bottom <= viewport["height"] - _BOTTOM_ROOM
     context.close()
 
 

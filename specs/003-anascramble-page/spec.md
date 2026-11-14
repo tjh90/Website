@@ -220,7 +220,7 @@ unknown letters and Backspace to correct, and check which cell each letter appea
   chosen position clustered around the centre of the scramble area.
 - **FR-006**: Scrambled characters MUST NOT overlap one another and MUST lie entirely inside the
   scramble area for any valid input length.
-- **FR-007**: The scramble area MUST be square, about 400 px wide on larger screens, and MUST shrink
+- **FR-007**: The scramble area MUST be square, about 320 px wide on larger screens, and MUST shrink
   to fit narrower screens without horizontal scrolling while keeping FR-006 true.
 - **FR-008**: Each press of "Scramble!" MUST produce a new random arrangement. Arrangements MUST be
   reproducible from a given seed for testing.
