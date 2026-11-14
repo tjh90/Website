@@ -164,6 +164,16 @@ read directly), the htmx 4 docs (four.htmx.org) and the npm registry.
   - Targeting `<main>` only with out-of-band header updates: more markup, and it still needs the
     drawer closed. Rejected.
 
+- **Firefox findings (2026-11-14, during implementation)**:
+  - Firefox does not transition `display`, so a closing popover with the UA `display: none` vanished
+    instantly instead of sliding out. The closed drawer now stays `display: block`, translated off
+    screen and `visibility: hidden`, with visibility switching to hidden only after
+    `--drawer-close-duration`. The `overlay` transition is kept for Chromium's top-layer handling,
+    and `z-index` keeps the drawer above the page in Firefox while it slides out. Only the open
+    drawer has `view-transition-name`, so the closed drawer on the new page is not captured.
+  - Firefox restores form-control state on reload, which kept a toggled switch after a reload.
+    `autocomplete="off"` on both switches prevents this (FR-014).
+
 ## R7. Keeping screen-reader users oriented after in-place navigation
 
 - **Decision**: Add `is_htmx_request` (true when the `HX-Request: true` header is present) to the

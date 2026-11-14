@@ -40,6 +40,8 @@ def test_drawer_has_both_dark_mode_switches(client: TestClient, path: str) -> No
         assert 'type="checkbox"' in tag
         assert 'role="switch"' in tag
         assert re.search(r"\shx-preserve[\s>]", tag)
+        # Stops Firefox restoring a toggled switch on reload (FR-014).
+        assert 'autocomplete="off"' in tag
     assert 'id="dark-mode-light-device"' in light
     assert "checked" not in light
     assert 'id="dark-mode-dark-device"' in dark
