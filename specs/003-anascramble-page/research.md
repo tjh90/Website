@@ -26,8 +26,10 @@ the npm registry and the site's existing CSP (`src/website/app.py`).
 
 - **Decision**: Render the scramble area as inline SVG. Each character is a `<text>` element with
   `x`/`y` attributes. The `viewBox` is computed by the server to enclose every character plus a
-  margin, never smaller than 400 × 400 units and always square and centred on the origin. The SVG is
-  `width: 100%; max-width: 400px; aspect-ratio: 1`.
+  margin, never smaller than 320 × 320 units and always square and centred on the origin. The SVG is
+  `aspect-ratio: 1`, at most 320 px wide, so letters keep their natural size. (Main's 400-unit
+  area left blank space round typical words, pushing the controls towards the bottom of short
+  screens; letters of up to 15-letter words stay within 160 units of the centre.)
 - **Rationale**:
   - The CSP is `style-src 'self'`, which blocks `style=""` attributes. Main positioned letters with
     inline `left`/`top` styles, which would be blocked here. SVG geometry attributes are not styles.

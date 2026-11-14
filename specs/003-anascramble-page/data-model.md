@@ -14,7 +14,7 @@ model, which lives in `website.routes`.
 | `RADIUS_STEP` | 5.0 | Main's `DEFAULT_OFFSET_INCR` |
 | `TRIES_PER_STEP` | 10 | Main (`tries % 10`) |
 | `MIN_SPACING` | 58.0 | Square clearance; main's circular 50 let Rock Salt ink overlap (research R3) |
-| `MIN_VIEW_SIZE` | 400.0 | Main's 400 px container (R2) |
+| `MIN_VIEW_SIZE` | 320.0 | Fits up to about 15 letters without blank space round them (R2); main used 400 |
 | `VIEW_MARGIN` | 40.0 | Keeps glyph ink (up to 49 units, off-centre) fully inside the box |
 
 ## AnascrambleForm (Pydantic, request body)
