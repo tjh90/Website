@@ -6,11 +6,14 @@ type: DRINK
 
 ## Ingredients
 
-- Champagne/Prosecco/Cava
-- Gin (50 ml)
 - Ice cubes
-- Lime
+
+- Gin (50 ml)
 - [OPTIONAL] Elderflower cordial (10 ml)
+
+- Limes (1 slice)
+
+- Champagne/Prosecco/Cava (200 ml)
 
 ## Method
 
