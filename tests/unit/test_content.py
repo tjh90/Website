@@ -14,6 +14,7 @@ from website.content import (
     LICENCE_NAME,
     LICENCE_URL,
     PAGES,
+    RECIPES,
     BuildInfo,
     Credit,
     Icon,
@@ -24,10 +25,11 @@ _FULL_SHA = "0123456789abcdef0123456789abcdef01234567"
 
 
 def test_pages_registry() -> None:
-    """The navigation lists Home, Anascramble then About with the expected metadata."""
+    """The navigation lists Home, Anascramble, Recipes then About with the expected metadata."""
     assert [(p.name, p.path, p.title, p.nav_label) for p in PAGES] == [
         ("home", "/", "Tim's Page", "Home"),
         ("anascramble", "/anascramble", "Anascramble", "Anascramble"),
+        ("recipes", "/recipes", "Recipes", "Recipes"),
         ("about", "/about", "About", "About"),
     ]
 
@@ -43,6 +45,7 @@ def test_page_names_and_paths_are_unique() -> None:
     [
         (HOME.title, "Tim's Page"),
         (ANASCRAMBLE.title, "Anascramble · Tim's Page"),
+        (RECIPES.title, "Recipes · Tim's Page"),
         (ABOUT.title, "About · Tim's Page"),
     ],
 )

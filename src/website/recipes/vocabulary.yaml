@@ -1,0 +1,67 @@
+# Recipe types, in the order shown in the filter.
+types:
+  - Drink
+  - Main
+  - Pudding
+  - Side
+
+# Master ingredient list. Every ingredient in every recipe must appear here.
+# Use the spelling to show on the site. No "/" or parentheses.
+ingredients:
+  - Bacon
+  - Bay leaf
+  - Bird's eye chilis
+  - Bread
+  - Broccoli
+  - Butter
+  - Cashew nuts
+  - Carrots
+  - Celery
+  - Cheese
+  - Chicken
+  - Chicken stock
+  - Cider vinegar
+  - Cooking oil
+  - Eggs
+  - Garlic
+  - Gravy
+  - Italian style herb blend
+  - Limes
+  - Milk
+  - Mustard
+  - Onions
+  - Parmesan rind
+  - Parsnips
+  - Pasta
+  - Peas
+  - Plain flour
+  - Peppers
+  - Potatoes
+  - Raisins
+  - Rosemary
+  - Sausages
+  - Shallots
+  - Sweet potatoes
+  - Tarragon
+  - Thyme
+  - Worcestershire sauce
+
+  - Cocoa powder
+  - Dark chocolate
+  - Double cream 
+  - Vanilla ice cream
+  - Light brown soft sugar
+  - Maltesers
+  - Milk chocolate
+  - White chocolate
+
+  - Cava
+  - Champagne
+  - Elderflower cordial
+  - Gin
+  - Ice cubes
+  - Pedro Ximénez Sherry
+  - Prosecco
+  - Sherry
+  - Whisky
+  - White wine

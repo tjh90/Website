@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% set page_title = "Recipes" %}
+{% set current_page = "recipes" %}
+{% set query = search.query %}
+{% block content %}
+<div class="recipes-layout">
+  {% if collection.recipes %}
+  {#- Collapsed on narrow screens; on wide screens CSS hides the summary and forces the panel open,
+      so it becomes a sidebar. The server never adds "open". -#}
+  <details class="recipe-filters-panel">
+    <summary>
+      <span>Filters <span id="filter-count" class="filter-count">{% if search.active_filter_count %}· {{ search.active_filter_count }} active{% endif %}</span></span>
+      <svg class="icon chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </summary>
+    {#- Live filtering: htmx re-requests the page as the visitor types and swaps in only the
+        results and the filter count, so focus stays in the form. Without JavaScript the form
+        submits normally. -#}
+    <form id="recipe-filters" class="recipe-filters" method="get" action="/recipes" role="search"
+          aria-label="Filter recipes"
+          hx-get="/recipes" hx-trigger="submit, input delay:250ms" hx-target="#recipe-results"
+          hx-select="#recipe-results" hx-select-oob="#filter-count" hx-swap="outerHTML"
+          hx-push-url="true" hx-sync="this:replace">
+      <fieldset>
+        <legend>Type</legend>
+        {% for t in collection.types_in_use %}
+        <label class="type-option"><input type="checkbox" name="type" value="{{ t.key }}"{% if t.key in query.type %} checked{% endif %}> {{ t.name }}</label>
+        {% endfor %}
+      </fieldset>
+      <div class="filter-field">
+        <label for="recipe-name">Name</label>
+        <input id="recipe-name" name="name" type="search" maxlength="100" autocomplete="off" value="{{ query.name }}">
+      </div>
+      <div class="filter-field">
+        <label for="recipe-ingredient">Ingredient</label>
+        <input id="recipe-ingredient" name="ingredient" type="search" maxlength="100" list="ingredient-options" autocomplete="off" value="{{ query.ingredient }}">
+        <datalist id="ingredient-options">
+          {% for name in collection.ingredient_names %}
+          <option value="{{ name }}"></option>
+          {% endfor %}
+        </datalist>
+      </div>
+      {#- Only shown without JavaScript (CSS hides it when scripting is enabled). -#}
+      <button type="submit" class="primary-button filter-submit">Filter</button>
+    </form>
+  </details>
+  {% endif %}
+
+  <section id="recipe-results" class="recipe-results" aria-label="Recipes">
+    <div class="results-header">
+      {% set count = search.recipes | length %}
+      <p role="status">
+        {%- if not collection.recipes %}No recipes yet.
+        {%- elif count == 0 %}No matching recipes.
+        {%- elif count == 1 %}1 recipe
+        {%- else %}{{ count }} recipes{% endif -%}
+      </p>
+      {% if search.is_filtered %}
+      <a href="/recipes" class="clear-filters">Clear filters</a>
+      {% endif %}
+    </div>
+    {% if search.is_filtered and not count %}
+    <p class="no-results-tip">Try fewer filters, or pick an ingredient from the suggestions as you type.</p>
+    {% endif %}
+    {% if count %}
+    <ul class="recipe-list">
+      {% for recipe in search.recipes %}
+      <li>
+        <div class="recipe-list-row">
+          <a href="/recipes/{{ recipe.slug }}">{{ recipe.name }}</a>
+          <span class="recipe-type">{{ recipe.type.name }}</span>
+        </div>
+        <p class="recipe-summary">{{ recipe.ingredient_summary }}</p>
+      </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

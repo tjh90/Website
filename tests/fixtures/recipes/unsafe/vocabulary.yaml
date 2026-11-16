@@ -1,0 +1,25 @@
+# Test collection. Dessert and Mint are deliberately unused.
+types:
+  - Drink
+  - Breakfast
+  - Snack
+  - Dessert
+
+ingredients:
+  - Aperol
+  - Bacon
+  - Bread
+  - Cava
+  - Champagne
+  - Egg
+  - Elderflower cordial
+  - Gin
+  - Ginger beer
+  - Ice cubes
+  - Lime
+  - Mint
+  - Mushroom
+  - Orange
+  - Prosecco
+  - Soda water
+  - Vodka

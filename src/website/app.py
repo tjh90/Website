@@ -13,6 +13,7 @@ from starlette.types import ASGIApp, Message, Receive, Scope, Send
 from website import routes
 from website.config import Settings, get_settings
 from website.content import NOT_FOUND_TITLE
+from website.cookbook import load_collection
 from website.templating import render
 
 _STATIC_DIR: Final = Path(__file__).parent / "static"
@@ -86,9 +87,13 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     Returns:
         The configured FastAPI application.
+
+    Raises:
+        RecipeCollectionError: If the recipe collection is invalid, so the site does not start.
     """
     app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None)
     app.state.settings = settings or get_settings()
+    app.state.recipes = load_collection(app.state.settings.recipes_dir)
     app.mount("/static", StaticFiles(directory=_STATIC_DIR), name="static")
     app.include_router(routes.router)
     app.add_exception_handler(StarletteHTTPException, _handle_http_exception)

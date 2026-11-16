@@ -4,7 +4,7 @@ from typing import Literal
 
 import pytest
 from axe_playwright_python.sync_playwright import Axe
-from playwright.sync_api import Browser, Page
+from playwright.sync_api import Browser, Page, expect
 
 _AXE = Axe()
 _BLOCKING_IMPACTS = {"serious", "critical"}
@@ -72,5 +72,46 @@ def test_anascramble_no_serious_violations(
     if state == "dimmed":
         page.locator("#solution").press_sequentially("tt")
         page.locator("#scramble text.dimmed").nth(1).wait_for()
+    _assert_no_blocking_violations(page)
+    context.close()
+
+
+@pytest.mark.parametrize("color_scheme", ["light", "dark"])
+@pytest.mark.parametrize("width", [1280, 390])
+@pytest.mark.parametrize(
+    "path",
+    [
+        "/recipes",
+        "/recipes/french-75",
+        "/recipes?type=drink",
+        "/recipes?ingredient=limes",
+        "/recipes?name=zzz",
+    ],
+)
+def test_recipes_no_serious_violations(
+    browser: Browser, base_url: str, path: str, width: int, color_scheme: Literal["light", "dark"]
+) -> None:
+    """Recipe pages (unfiltered, filtered and empty results) pass axe at both widths and themes."""
+    context = browser.new_context(
+        base_url=base_url, color_scheme=color_scheme, viewport={"width": width, "height": 900}
+    )
+    page = context.new_page()
+    page.goto(path)
+    _assert_no_blocking_violations(page)
+    context.close()
+
+
+@pytest.mark.parametrize("color_scheme", ["light", "dark"])
+def test_recipes_expanded_filters_no_serious_violations(
+    browser: Browser, base_url: str, color_scheme: Literal["light", "dark"]
+) -> None:
+    """The phone filters panel passes axe when expanded."""
+    context = browser.new_context(
+        base_url=base_url, color_scheme=color_scheme, viewport={"width": 390, "height": 844}
+    )
+    page = context.new_page()
+    page.goto("/recipes?type=drink")
+    page.locator(".recipe-filters-panel > summary").click()
+    expect(page.get_by_label("Drink")).to_be_visible()
     _assert_no_blocking_violations(page)
     context.close()

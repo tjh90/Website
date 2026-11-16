@@ -4,6 +4,7 @@ import socket
 import threading
 import time
 from collections.abc import Iterator
+from pathlib import Path
 from typing import Final
 
 import httpx2
@@ -16,12 +17,14 @@ from website.app import create_app
 from website.config import Settings
 
 LIVE_REVISION: Final = "0123456789abcdef0123456789abcdef01234567"
+# Fixed recipe collections, so app tests do not depend on the real recipes.
+FIXTURE_RECIPES: Final = Path(__file__).parent / "fixtures" / "recipes"
 
 
 @pytest.fixture
 def settings() -> Settings:
-    """Settings with no known revision."""
-    return Settings(revision=None)
+    """Settings with no known revision and the valid fixture recipe collection."""
+    return Settings(revision=None, recipes_dir=FIXTURE_RECIPES / "valid")
 
 
 @pytest.fixture
@@ -49,7 +52,9 @@ def live_server() -> Iterator[str]:
     sock.bind(("127.0.0.1", 0))
     port = sock.getsockname()[1]
     config = uvicorn.Config(
-        create_app(Settings(revision=LIVE_REVISION)), log_level="warning", lifespan="off"
+        create_app(Settings(revision=LIVE_REVISION, recipes_dir=FIXTURE_RECIPES / "valid")),
+        log_level="warning",
+        lifespan="off",
     )
     server = uvicorn.Server(config)
     thread = threading.Thread(target=server.run, kwargs={"sockets": [sock]}, daemon=True)

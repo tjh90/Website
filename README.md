@@ -13,6 +13,7 @@ cookies and stores nothing in the browser.
 |-------|------|-------------|
 | `/` | Home | Landing page with external links (GitHub, PhD thesis, published paper) and a painting |
 | `/anascramble` | Anascramble | Anagram solving aid: scrambles letters and tracks a partial solution |
+| `/recipes` | Recipes | Recipe collection with type, name and ingredient filters |
 | `/about` | About | Licence, source code link, and running revision, cookie statement and credits |
 
 ## Prerequisites
@@ -35,6 +36,20 @@ uv run website
 ```
 
 Set `WEBSITE_REVISION` to a git SHA to see the revision on the About page.
+
+## Recipes
+
+Recipes are markdown files in [`src/website/recipes/`](src/website/recipes/), checked against
+the types and master ingredient list in its `vocabulary.yaml`. The folder's
+[README](src/website/recipes/README.md) explains the format. Check the collection with:
+
+```bash
+uv run pytest tests/unit/test_shipped_recipes.py
+```
+
+Changes appear the next time the site starts. The site will not start with an invalid collection.
+The same check runs in the CI `test` job, so make `test` a required status check on `main` (branch
+protection) to stop an invalid recipe or an unlisted ingredient being merged.
 
 ## Quality checks
 
